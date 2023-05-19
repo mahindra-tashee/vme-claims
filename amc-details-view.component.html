@@ -1,0 +1,165 @@
+
+<p-toast position="top-right" key="amcDetailsViewMessage"></p-toast>
+<div class='row' id="amcViewTab">
+    <div class="ui top attached tabular menu">
+      <a id="amcContractDetails" class=" active item" (click)='amcDetails()'data-tab="amcContractDetailsDataTab">AMC Contract Details</a>
+      <a id="amcMutualExcl" class="item" (click)='mutualexclDetails()' data-tab="amcMutualExclDataTab">Mutually Exclusive Claims Details </a>
+    </div>
+    <div id="amcContractDetailsTab" class="ui bottom attached tab segment active first" data-tab="amcContractDetailsDataTab">
+      <form [formGroup]="amcContractDetailsForm">
+        <div class='four fields'>
+             <div class="field">
+                <label>Chassis No </label>
+                <input type="text" placeholder="Chassis No" id="Chassis_No" formControlName="Chassis_No" readonly>
+              </div>
+          
+              <div class="field">
+                <label>Contract No</label>
+                <input type="text" placeholder="Contract No" id="Contract_No" formControlName="Contract_No">
+              </div>
+          
+              <div class="field">
+                <label>AMC Order Type </label>
+                <input type="text" placeholder="AMC Order Type" id="txt_amc_order_type" formControlName="AMC_order_Type"
+                  readonly>
+              </div>
+          
+              <div class="field">
+                <label>AMC Product Type </label>
+                <input type="text" placeholder="AMC Product Type" id="AMC_Product_Type" formControlName="AMC_Product_Type" readonly>
+              </div>
+            </div>
+
+            <div class='four fields'>
+                <div class="field">
+                   <label>AMC Campaign ID </label>
+                   <input type="text" placeholder="AMc Campaign ID" id="amc_campaign_id" formControlName="AMC_Campaign_ID" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Campaign Code</label>
+                   <input type="text" placeholder="AMC Campaign Code" id="amc_campaign_code" formControlName="AMC_Campaign_Code">
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Campaign Name </label>
+                   <input type="text" placeholder="AMC Campaign Name" id="amc_campaign_name" formControlName="AMC_Campaign_Name"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>Campaign Start Date </label>
+                   <input type="text" placeholder="Campaign Start Date" id="campaign_start_date" formControlName="Campaign_Start_Date" readonly>
+                 </div>
+               </div>
+            
+               <div class='four fields'>
+                <div class="field">
+                   <label>Campaign End Date </label>
+                   <input type="text" placeholder="Campaign End Date" id="campaign_end_date" formControlName="Campaign_End_Date" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>CRM AMC Order No</label>
+                   <input type="text" placeholder="CRM AMC Order No" id="crm_amc_order_no" formControlName="CRM_AMC_Order_No">
+                 </div>
+             
+                 <div class="field">
+                   <label>Contract KM/Hours </label>
+                   <input type="text" placeholder="Contract KM/Hours" id="contract_k/h" formControlName="Contract_K_H"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Contract Period </label>
+                   <input type="text" placeholder="AMC Contract Period " id="amc_contract_period" formControlName="AMC_Contract_Period" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>AMC Product Code </label>
+                   <input type="text" placeholder="AMC Product Code" id="amc_product_code" formControlName="AMC_Product_Code" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Product Discription</label>
+                   <input type="text" placeholder="AMC Product Discription" id="amc_product_discription" formControlName="AMC_Product_Discription">
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Start Date </label>
+                   <input type="text" placeholder="AMC Start Date" id="amc_start_date" formControlName="AMC_Start_Date"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC End Date </label>
+                   <input type="text" placeholder="AMC_End_Date " id="amc_end_date" formControlName="AMC_End_Date" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>AMC Start KMs </label>
+                   <input type="text" placeholder="AMC Start KMs" id="amc_start_kms" formControlName="AMC_Start_KMs" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC End KMs </label>
+                   <input type="text" placeholder="AMC End KMs" id="amc_end_kms" formControlName="AMC_End_KMs">
+                 </div>
+             
+                 <div class="field">
+                   <label>AMC Offer Price </label>
+                   <input type="text" placeholder="AMC Offer Pricee" id="amc_offer_price" formControlName="AMC_Offer_Price"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>TML Contribution </label>
+                   <input type="text" placeholder="TML Contribution " id="tml_contribution" formControlName="TML_Contribution" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>Contract Status </label>
+                   <input type="text" placeholder="Contract Status " id="contract_status" formControlName="Contract_Status" readonly>
+                 </div>
+               </div>
+            
+         </form>   
+    </div>
+    <div id="amcMutualExclTab" class="ui bottom attached tab segment" data-tab="amcMutualExclDataTab">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+            <p-table dataKey="" [rowHover]="true" [value]="mutualAmcObj" styleClass="p-datatable-striped">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 210px!important;white-space: break-spaces;">Mutual Ex.Claim id</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Scheme ID</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Custody Role</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Status</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-AmcExcldetail>
+                <tr>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{AmcExcldetail.claimId}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{AmcExcldetail.schemeId}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{AmcExcldetail.schemeName}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{AmcExcldetail.roleDescription}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{AmcExcldetail.statusDescription}}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+        </div>  
+              
+    </div>
+</div>
+

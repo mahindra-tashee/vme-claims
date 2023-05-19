@@ -1,0 +1,34 @@
+
+<p-toast position="top-right" key="actualConcessionCRMMessage"></p-toast>
+
+<form>
+  <div class="row">
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="actualConcessionCRMObj" [loading]="actualConcessionCRMLoading" [rowHover]="true" id="actualConcessionCRMTable" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 210px!important;white-space: break-spaces;">Type</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Sub-Type</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Amount W/O Tax</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Tax Amount</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Total Concession</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-actualConcessionCRMItem>
+          <tr>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ actualConcessionCRMItem.type }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ actualConcessionCRMItem.sub_TYPE }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ actualConcessionCRMItem.tm_DNRM_PRE_TAX_DISCOUNT }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ actualConcessionCRMItem.tax_RATE }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ actualConcessionCRMItem.seq_ID }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

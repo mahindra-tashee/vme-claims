@@ -1,0 +1,58 @@
+<p-toast position="top-right" key="availableDiscountMessage"></p-toast>
+
+<form>
+  <div class="content">
+    <div class="row">
+      <div class="four fields" [formGroup]="availableDiscountForm">
+        <div class="field">
+          <label>Chassis No</label>
+          <input type="text" placeholder="Chassis No" formControlName="CHASSIS_NO" id="txt_available_discount_chassis_no" readonly>
+        </div>
+        <div class="field">
+          <label>TM Invoice No</label>
+          <input type="text" placeholder="TM Invoice No" formControlName="TM_INVOICE_NO" id="txt_available_discount_tm_invoice_no" readonly>
+        </div>
+
+        <div class="field">
+          <label>Flat Discount - SAP</label>
+          <input type="text" placeholder="Flat Discount - SAP" formControlName="FLAT_DISCOUNT_SAP" id="txt_available_discount_flat_discount_sap" readonly>
+        </div>
+
+        <div class="field">
+          <label>Remaining Discount</label>
+          <input type="text" placeholder="Remaining Discount" formControlName="REMAINING_DISCOUNT" id="txt_available_discount_remaining_discount" readonly>
+        </div>
+      </div>
+    </div>
+
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="availableDiscountObj" [loading]="availableDiscountLoading" [rowHover]="true" id="availableDiscountTable" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 200px!important;white-space: break-spaces;">Claim Id</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Scheme Id</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Claim Amount</th>
+            <th style="width: 200px!important;white-space: break-spaces;">TMLBSL Approved Amount</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Used Flat Discount By User</th>
+            <th style="width: 200px!important;white-space: break-spaces;">TMLBSL Used Flat Discount</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-availableDiscountItem>
+          <tr>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.claim_ID }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.scheme_ID }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.claim_AMT_GDC }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.claim_AMT_GDC }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.used_FLAT_DISC }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ availableDiscountItem.gdc_USED_DISC }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

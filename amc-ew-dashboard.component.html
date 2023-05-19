@@ -1,0 +1,268 @@
+<p-toast position="top-right" key="amcEwErrorMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> AMC And EW Dashboard </a> </div>
+
+  <div class='row'>
+    <div class="ui accordion column field">
+      <div class="active title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="active content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" hidden>
+            <label>Business Unit</label>
+            <select class='ui selection dropdown' id="dd_amc_ew_dashboard_business_unit">
+              <option selected disabled value="">Business Unit</option>
+              <option *ngFor="let businessUnitItem of businessUnitList" value="{{ businessUnitItem.text }}">{{ businessUnitItem.value }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Claim Type</label>
+            <select class='ui selection dropdown' id="dd_amc_ew_dashboard_claim_type">
+              <option value="AMC_TRANS">AMC</option>
+              <option value="EW">Extened Warranty</option>
+            </select>
+          </div>
+
+          <div class="field" *ngIf="isIndividualClaim">
+            <label>Claim Id</label>
+            <input type="text" placeholder="Enter Claim Id" id="txt_amc_ew_dashboard_claim_id" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Chassis No</label>
+            <input type="text" placeholder="Enter Chassis No" id="txt_amc_ew_dashboard_chassis_no" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>LOB </label>
+            <select class="ui dropdown selection search multiple" placeholder="LOB" id="dd_amc_ew_dashboard_lob">
+              <option value="" disabled selected hidden>LOB</option>
+              <option *ngFor="let lobItem of lobList" value="{{ lobItem.lobId }}">{{ lobItem.lob }}</option>
+            </select>
+          </div> 
+
+          <div class="field">
+            <label>PPL</label>
+            <select class="ui dropdown selection search multiple" placeholder="PPL" id="dd_amc_ew_dashboard_ppl">
+              <option value="" disabled selected hidden>PPL</option>
+              <option *ngFor="let pplItem of pplList" value="{{ pplItem.pplId }}">{{ pplItem.ppl }}</option>
+            </select>
+          </div>   
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>PL</label>
+            <select class="ui dropdown selection search multiple " placeholder="PL" id="dd_amc_ew_dashboard_pl">
+              <option value="" disabled selected hidden>PL</option>
+              <option *ngFor="let plItem of plList" value="{{ plItem.plId }}">{{ plItem.pl }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>VC</label>
+            <select class="ui dropdown selection search multiple" placeholder="VC" id="dd_amc_ew_dashboard_vc">
+              <option value="" disabled selected hidden>VC</option>
+              <option *ngFor="let vcItem of vcList" value="{{ vcItem.vc }}">{{ vcItem.vc }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Status</label>
+            <select class='ui selection dropdown' id="dd_amc_ew_dashboard_status">
+              <option value="">All</option>
+              <option *ngFor="let statusItem of statusList" value="{{ statusItem.st_ID }}">{{ statusItem.st_DESC }}</option>
+            </select>
+          </div>
+
+          <div class='field'>&nbsp;</div>
+
+          <div class='field'>
+            <div class="field pull-right">
+              <label>&nbsp;</label>
+              <div class="ui buttons">
+                <button class="ui button green_btn" id="btn_amc_ew_search" (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id="btn_amc_ew_reset" (click)="clearFilter(false)">Reset</button>
+              </div>
+            </div>
+          </div>
+         </div>
+        <div class="ui divider"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+    <div class='four wide field page-information' [hidden]="!isAmcAndEwClaimObj">
+      <label>Show </label>
+      <select (change)="amcAndEwClaimSizeChanged($event)" id="dd_amc_ew_dashboard_size" class="ui dropdown">
+        <option value=10>10</option>
+        <option value=15>15</option>
+        <option value=20>20</option>
+        <option value=50>50</option>
+      </select>
+      <label>Entries</label>
+    </div>
+    <div class='twelve wide field pagination' *ngIf="isAmcAndEwClaimObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setAmcAndEwClaimPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setAmcAndEwClaimPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setAmcAndEwClaimPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setAmcAndEwClaimPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setAmcAndEwClaimPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+    <div class="sixteen wide field">
+      <p-table class="box-shadow-custom" [value]="amcAndEwClaimObj" dataKey="" styleClass="p-datatable-striped"  id='amcAndEwClaimTable' [loading]="amcAndEwClaimLoading" [(selection)]="selectedAmcEwClaims">
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex">
+            <button type="button" pButton pRipple icon="pi pi-file-excel" class="p-button-success p-mr-2 sticky-column-export" pTooltip="Export AMC And EW Claims Data" tooltipPosition="bottom" [disabled]="!isAmcAndEwClaimObj"></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="amcAndEwClaimLoading == true ? '' : 'sticky-column'"> <p-tableHeaderCheckbox [hidden]="!isAmcAndEwClaimObj"></p-tableHeaderCheckbox></th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="amcAndEwClaimLoading == true ? '' : 'sticky-column-second'">Claim Id</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Type</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Type</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GDC Approved Amount </th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice No</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice Date</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role description</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status description</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">BU</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">chassis BU</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Resion</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Area</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">LOB</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">PPL</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">PL</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">VC</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Name(Dealer Code)</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">VC Category</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-amcEwClaimItem let-i="rowIndex">
+          <tr>
+            <td style="width: 3rem" [ngClass]="amcAndEwClaimLoading == true ? '' : 'sticky-column'"> <p-tableCheckbox [value]="amcEwClaimItem"></p-tableCheckbox> </td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="amcAndEwClaimLoading == true ? '' : 'sticky-column-second'" (click)="openIndividualClaimView(amcEwClaimItem.chassisNo, amcEwClaimItem.schemeId, amcEwClaimItem.st_ID,amcEwClaimItem.claimId,amcEwClaimItem.buId)" pTooltip="View Individual Claim" tooltipPosition="bottom">{{ amcEwClaimItem.claimId }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(amcEwClaimItem.chassisNo)" pTooltip="View Chassis" tooltipPosition="bottom">{{ amcEwClaimItem.chassisNo }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(amcEwClaimItem.schemeId)" pTooltip="View Scheme" tooltipPosition="bottom">{{ amcEwClaimItem.schemeId }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.claimAmount }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.claimType }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.schemeType }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.claimAmountGdc}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.gstInvoiceNo}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.gstInvoiceDate | date:"dd-MMM-yyyy" }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.custRole }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.role_DESCRIPTION }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.status}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.st_DESC}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.buId}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.chassiBu}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.region}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.area }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.lob}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.ppl }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.pl }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.vc}}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.dealerCode }}</td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"> {{ amcEwClaimItem.vcCategory}}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;"
+      *ngIf="isAmcAndEwClaimObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setAmcAndEwClaimPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setAmcAndEwClaimPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setAmcAndEwClaimPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setAmcAndEwClaimPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setAmcAndEwClaimPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="ui longer fullscreen coupled modal" id='modal_chassis_view'>
+  <div class="header">
+    View Chassis
+  </div>
+  <i class="close icon" (click)='closeChassisView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <ng-template [ngComponentOutlet]="chassisViewTabsLazyComp | async"></ng-template>
+    </div>
+  </div>
+</div>
+
+<div class="ui longer fullscreen coupled modal" id='model_amcew_individual_claim_url_view'>
+  <div class="header">
+    View Individual Claim
+  </div>
+  <i class="close icon" (click)='closeIndividualClaimView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <ng-template [ngComponentOutlet]="individualClaimViewTabsLazyComp | async"></ng-template>
+    </div>
+  </div>
+</div>
+
+<div class="ui fullscreen coupled modal" id='model_amcandew_claim_url_view'>
+  <div class="header">
+    View Individual Claim
+  </div>
+  <i class="close icon" (click)='closeIndividualClaimView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <object type="text/html" [data]="sharedService.individualClaimViewUrl | safe" width="100%"></object>
+    </div>
+  </div>
+</div>
+
+<div class="ui fullscreen coupled modal" id='model_amcew_scheme_url_view'>
+  <div class="header">
+    View Scheme
+  </div>
+  <i class="close icon" (click)='closeSchemeView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <object type="text/html" [data]="sharedService.schemeViewUrl | safe" width="100%"></object>
+    </div>
+  </div>
+</div>
