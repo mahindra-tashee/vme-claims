@@ -1,0 +1,85 @@
+<p-toast position="top-right" key="retailHistoryMessage"></p-toast>
+
+<form>
+  <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+    <div class='four wide field popup-page-information' [hidden]="!isRetailHistoryObj">
+      <label>Show   </label><span></span>
+      <select (change)="sizeChanged($event)" id="dd_retail_history_size" class="ui dropdown">
+        <option value=10>10</option>
+        <option value=25>25</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+      </select>
+      <label>Entries </label>
+    </div>
+    <div class='twelve wide field pagination' *ngIf="isRetailHistoryObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+    <div class="sixteen wide field">
+      <p-table class="box-shadow-custom" [value]="retailHistoryObj" [loading]="retailHistoryLoading" id="retailHistoryTable" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 130px!important;white-space: break-spaces;">Physical status</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Current Status</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Invoice No</th>
+            <th style="width: 170px!important;white-space: break-spaces;">Inv Type</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Inv status</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Inv Created Date</th>
+            <th style="width: 180px!important;white-space: break-spaces;">Inv Cancelled Date</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-retailHistoryItem>
+          <tr>
+            <td style="width: 130px!important;white-space: break-spaces;">{{ retailHistoryItem.physical_status }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ retailHistoryItem.current_status }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ retailHistoryItem.invoice_no }}</td>
+            <td style="width: 170px!important;white-space: break-spaces;">{{ retailHistoryItem.invoice_type }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ retailHistoryItem.invoice_status }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ retailHistoryItem.invoice_created_date }}</td>
+            <td style="width: 180px!important;white-space: break-spaces;">{{ retailHistoryItem.invoice_cancelled_date }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class='sixteen wide field pagination' style="margin-top: 10px; margin-bottom: 20px;" *ngIf="isRetailHistoryObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+  </div>
+</form>

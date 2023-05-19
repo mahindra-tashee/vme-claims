@@ -1,0 +1,144 @@
+<p-toast position="top-right" key="groupClaimApproverDocumentsMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <p-confirmDialog [style]="{width: '50vw'}" key="groupClaimApproverDocumentsDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row">
+    <div id="groupClaimApproverDocumentsActiveTab" class="ui top attached tabular menu">
+      <a id="groupClaimApproverDocumentsTab" class="active item" data-tab="groupClaimApproverDocumentsDataTab">Group Document</a>
+      <a id="chassisApproverDocumentsTab" class="item" data-tab="chassisApproverDocumentsDataTab">Chassis Wise Document</a>
+    </div>
+
+    <div id="groupClaimApproverDocumentsTableTab" class="ui bottom attached tab segment active groupClaimApproverDocumentsDataTab" data-tab="groupClaimApproverDocumentsDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+          <p-table [value]="groupClaimApproverDocumentsObj" [loading]="groupClaimApproverDocumentsLoading" styleClass="p-datatable-striped" [(selection)]="selectedGroupDocuments" [rowHover]="true" id="groupClaimApproverDocumentsTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimApproverDocumentsLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isGroupClaimApproverDocumentsObj" [disabled]="!isGDCChecker" (click)="getSelectedGroupDocumentId()"></p-tableHeaderCheckbox></th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Group Claim Id</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Auto Validated</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupClaimApproverDocumentsItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="groupClaimApproverDocumentsLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimApproverDocumentsItem" [disabled]="!isGDCChecker" (click)="verifyGroupDocument(groupClaimApproverDocumentsItem.doc_ID, '' , true)"></p-tableCheckbox></td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsItem.doc_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsItem.g_CLAIM_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsItem.document_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadGroupDocument(groupClaimApproverDocumentsItem)" style="cursor: pointer;" class="toggle-button">{{ groupClaimApproverDocumentsItem.document_NAME }}</a>
+                </td>
+                <td style="width: 100px!important;min-width: 100px;white-space: break-spaces;">{{ groupClaimApproverDocumentsItem.is_AUTO_VERIFIED }}</td>
+                <td style="width: 200px!important;min-width: 200px;;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadGroupDocument(groupClaimApproverDocumentsItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="chassisApproverDocumentsTableTab" class="ui bottom attached tab segment chassisApproverDocumentsDataTab" data-tab="chassisApproverDocumentsDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+          <p-table [value]="chassisApproverDocumentsObj" [loading]="chassisApproverDocumentsLoading" styleClass="p-datatable-striped" [(selection)]="selectedChassisDocuments" [rowHover]="true" id="chassisApproverDocumentsTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="chassisApproverDocumentsLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isChassisApproverDocumentsObj" [disabled]="!isGDCChecker" (click)="getSelectedChassisDocumentId()"></p-tableHeaderCheckbox></th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-chassisApproverDocumentsItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="chassisApproverDocumentsLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="chassisApproverDocumentsItem" [disabled]="!isGDCChecker" (click)="verifyChassisDocument(chassisApproverDocumentsItem.doc_ID, '' , true)"></p-tableCheckbox></td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisApproverDocumentsItem.DOC_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisApproverDocumentsItem.CLAIM_ID }}</td>
+                <td style="width: 250px!important;min-width: 250px;white-space: break-spaces;">{{ chassisApproverDocumentsItem.CHASSIS_NO }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ chassisApproverDocumentsItem.DOCUMENT_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadIndividualDocument(chassisApproverDocumentsItem)" style="cursor: pointer;" class="toggle-button">{{ chassisApproverDocumentsItem.DOCUMENT_NAME }}</a>
+                </td>
+                <td style="width: 210px!important;min-width: 210px;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadIndividualDocument(chassisApproverDocumentsItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class='four fields' [formGroup]="groupApproverSubmitForm">
+    <div class="field">
+      <label>Action <span class="required">*</span></label>
+      <select class='ui dropdown selection' id="dd_group_claim_approver_documents_action" formControlName="ACTION">
+        <option value="">Action</option>
+        <option *ngFor="let actionitem of actionList" value="{{ actionitem.action }}">{{ actionitem.act_DESC }}</option>
+      </select>
+      <div class="error-message" *ngIf="groupApproverSubmitForm.controls.ACTION.errors?.required && groupApproverSubmitForm.controls.ACTION.touched">Action Required</div>
+    </div>
+
+    <div class="field" [hidden]="!isGroupUserList">
+      <label>User <span class="required">*</span></label>
+      <select class='ui selection dropdown' id="dd_group_claim_approver_documents_user" formControlName="USER">
+        <option selected disabled value="">User</option>
+        <option *ngFor="let groupUserItem of groupUserList" value="{{ groupUserItem.user_ID }}">{{ groupUserItem.complete_NAME }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="groupApproverSubmitForm.controls.USER.errors?.required && groupApproverSubmitForm.controls.USER.touched">User Required</div>
+    </div>
+
+    <div class="field" [hidden]="!isGDCChecker">
+      <label>Reason <span class="required">*</span></label>
+      <select class='ui selection dropdown' id="dd_group_claim_approver_documents_reason">
+        <option value="Your Own Comment">Your Own Comment</option>
+        <option value="CRM Credit Note Required" *ngIf="groupApproverSubmitForm.controls.ACTION.value == 'DREC'">CRM Credit Note Required</option>
+        <option value="System Generated Revised GST Invoice Require" *ngIf="groupApproverSubmitForm.controls.ACTION.value == 'DREC'">System Generated Revised GST Invoice Require</option>
+        <option value="GST Invoice Not Attached" *ngIf="groupApproverSubmitForm.controls.ACTION.value == 'RECO'">GST Invoice Not Attached</option>
+        <option value="Upload Updated GST Invoice" *ngIf="groupApproverSubmitForm.controls.ACTION.value == 'RECO'">Upload Updated GST Invoice</option>
+        <option value="Ok To Process" *ngIf="groupApproverSubmitForm.controls.ACTION.value == 'HOLD'">Ok To Process</option>
+      </select>
+    </div>
+
+    <div class="field" [hidden]="!isGroupRemark">
+      <label>Remark <span class="required">*</span></label>
+      <input type="text" placeholder="Remark" id="dd_group_claim_approver_documents_remarks" formControlName="REMARK" autocomplete="off">
+      <div class="error-message" *ngIf="groupApproverSubmitForm.controls.REMARK.errors?.required && groupApproverSubmitForm.controls.REMARK.touched">Remark Required</div>
+    </div>
+
+    <div class="field" [hidden]="isGroupUserList">
+      &nbsp;
+    </div>
+
+    <div class="field" style="text-align: right;">
+      <label>&nbsp;</label>
+      <div class="ui buttons">
+        <button class="ui button green_btn" style="margin-right: 10px;" (click)="updateCustody()"> <i class="check icon"> </i> &nbsp; Save </button>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,86 @@
+<p-toast position="top-right" key="groupClaimDocumentViewMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <div class="row">
+    <div id="groupDocumentViewActiveTab" class="ui top attached tabular menu">
+      <a id="groupDocumentViewTab" class="active item" data-tab="groupDocumentViewDataTab">Group Document</a>
+      <a id="chassisDocumentViewTab" class="item" data-tab="chassisDocumentViewDataTab">Chassis Wise Document</a>
+    </div>
+
+    <div id="groupDocumentViewTableTab" class="ui bottom attached tab segment active groupDocumentViewDataTab" data-tab="groupDocumentViewDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="groupClaimDocumentViewObj" [loading]="groupClaimDocumentViewLoading" styleClass="p-datatable-striped" [rowHover]="true" id="groupClaimDocumentViewTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Group Claim Id</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Auto Verified</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupDocumentViewItem>
+              <tr>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentViewItem.doc_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentViewItem.g_CLAIM_ID }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ groupDocumentViewItem.document_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadGroupDocument(groupDocumentViewItem)" style="cursor: pointer;" class="toggle-button">{{ groupDocumentViewItem.document_NAME }}</a>
+                </td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentViewItem.is_AUTO_VERIFIED }}</td>
+                <td style="width: 210px!important;min-width: 210px;;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadGroupDocument(groupDocumentViewItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="chassisDocumentViewTableTab" class="ui bottom attached tab segment chassisDocumentViewDataTab" data-tab="chassisDocumentViewDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="chassisDocumentViewObj" [loading]="chassisDocumentViewLoading" styleClass="p-datatable-striped" [rowHover]="true" id="chassisDocumentViewTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-chassisDocumentViewItem>
+              <tr>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisDocumentViewItem.DOC_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisDocumentViewItem.CLAIM_ID }}</td>
+                <td style="width: 250px!important;min-width: 250px;white-space: break-spaces;">{{ chassisDocumentViewItem.CHASSIS_NO }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ chassisDocumentViewItem.DOCUMENT_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadIndividualDocument(chassisDocumentViewItem)" style="cursor: pointer;" class="toggle-button">{{ chassisDocumentViewItem.DOCUMENT_NAME }}</a>
+                </td>
+                <td style="width: 210px!important;min-width: 210px;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadIndividualDocument(chassisDocumentViewItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

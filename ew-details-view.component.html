@@ -1,0 +1,162 @@
+
+<p-toast position="top-right" key="ewDetailsViewMessage"></p-toast>
+<div class='row' id="ewViewTab">
+    <div class="ui top attached tabular menu">
+      <a id="ewContractDetails" class=" active item" (click)='ewDetails()'data-tab="ewContractDetailsDataTab">EW Contract Details</a>
+      <a id="ewMutualExcl" class="item" (click)='mutualexclDetails()' data-tab="ewMutualExclDataTab">Mutually Exclusive Claims Details </a>
+    </div>
+    <div id="ewContractDetailsTab" class="ui bottom attached tab segment active first" data-tab="ewContractDetailsDataTab">
+      <form [formGroup]="ewContractDetailsForm">
+        <div class='four fields'>
+             <div class="field">
+                <label>Chassis No </label>
+                <input type="text" placeholder="Chassis No" id="Chassis_No" formControlName="Chassis_No" readonly>
+              </div>
+          
+              <div class="field">
+                <label>Contract No </label>
+                <input type="text" placeholder="Contract No" id="Contract_No" formControlName="Contract_No">
+              </div>
+          
+              <div class="field">
+                <label>EW Order Type  </label>
+                <input type="text" placeholder="EW Order Type" id="txt_ew_order_type" formControlName="EW_order_Type"
+                  readonly>
+              </div>
+          
+              <div class="field">
+                <label>EW Product Type  </label>
+                <input type="text" placeholder="EW Product Type" id="EW_Product_Type" formControlName="EW_Product_Type" readonly>
+              </div>
+            </div>
+
+            <div class='four fields'>
+                <div class="field">
+                   <label>EW Campaign ID </label>
+                   <input type="text" placeholder="EW Campaign ID" id="ew_campaign_id" formControlName="EW_Campaign_ID" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Campaign Code </label>
+                   <input type="text" placeholder="EW Campaign Code" id="ew_campaign_code" formControlName="EW_Campaign_Code">
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Campaign Name  </label>
+                   <input type="text" placeholder="EW Campaign Name" id="ew_campaign_name" formControlName="EW_Campaign_Name"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>Campaign Start Date  </label>
+                   <input type="text" placeholder="Campaign Start Date" id="campaign_start_date" formControlName="Campaign_Start_Date" readonly>
+                 </div>
+               </div>
+            
+               <div class='four fields'>
+                <div class="field">
+                   <label>Campaign End Date </label>
+                   <input type="text" placeholder="Campaign End Date" id="campaign_end_date" formControlName="Campaign_End_Date" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>CRM EW Order No </label>
+                   <input type="text" placeholder="CRM EW Order No" id="crm_ew_order_no" formControlName="CRM_EW_Order_No">
+                 </div>
+             
+                 <div class="field">
+                   <label>Contract KM/Hours  </label>
+                   <input type="text" placeholder="Contract KM/Hours" id="contract_k/h" formControlName="Contract_K_H"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Contract Period  </label>
+                   <input type="text" placeholder="EW Contract Period " id="ew_contract_period" formControlName="EW_Contract_Period" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>EW Product Code </label>
+                   <input type="text" placeholder="EW Product Code" id="ew_product_code" formControlName="EW_Product_Code" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Product Discription </label>
+                   <input type="text" placeholder="EW Product Discription" id="ew_product_discription" formControlName="EW_Product_Discription">
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Start Date  </label>
+                   <input type="text" placeholder="EW Start Date" id="ew_start_date" formControlName="EW_Start_Date"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>EW End Date  </label>
+                   <input type="text" placeholder="EW Start Date " id="ew_dtart_date " formControlName="EW_End_Date" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>EW Start KMs </label>
+                   <input type="text" placeholder="EW Start KMs" id="ew_start_kms" formControlName="EW_Start_KMs" readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>EW End KMs  </label>
+                   <input type="text" placeholder="EW End KMs" id="ew_end_kms" formControlName="EW_End_KMs">
+                 </div>
+             
+                 <div class="field">
+                   <label>EW Offer Price  </label>
+                   <input type="text" placeholder="EW Offer Price" id="ew_offer_price" formControlName="EW_Offer_Price"
+                     readonly>
+                 </div>
+             
+                 <div class="field">
+                   <label>TML Contribution  </label>
+                   <input type="text" placeholder="TML Contribution " id="tml_contribution " formControlName="TML_Contribution" readonly>
+                 </div>
+               </div>
+
+               <div class='four fields'>
+                <div class="field">
+                   <label>Contract Status </label>
+                   <input type="text" placeholder="Contract Status " id="contract_status" formControlName="Contract_Status" readonly>
+                 </div>
+               </div>
+         </form>   
+    </div>
+    <div id="ewMutualexcltab" class="ui bottom attached tab segment" data-tab="ewMutualExclDataTab">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+            <p-table dataKey="" [rowHover]="true" [value]="mutualEwObj" styleClass="p-datatable-striped" [loading]="ewDetailsLoading">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 210px!important;white-space: break-spaces;">Mutual Ex.Claim id</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Scheme ID</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Custody Role</th>
+                  <th style="width: 210px!important;white-space: break-spaces;">Status</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-MutualExcldetail>
+                <tr>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{MutualExcldetail.claimId}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{MutualExcldetail.schemeId}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{MutualExcldetail.schemeName}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{MutualExcldetail.roleDescription}}</td>
+                  <td style="width: 210px!important;white-space: break-spaces;">{{MutualExcldetail.statusDescription}}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+        </div>               
+    </div>
+</div>

@@ -1,0 +1,367 @@
+<p-toast position="top-right" key="groupClaimDetailsMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <p-confirmDialog [style]="{width: '50vw'}" key="groupClaimDetailsDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row" [formGroup]="groupClaimDetailsForm">
+    <div class="five fields">
+      <div class="field">
+        <label>Group Claim ID </label>
+        <input type="text" placeholder="Group Claim Id" formControlName="GROUP_CLAIM_ID" id="txt_group_claim_details_group_claim_id" readonly>
+      </div>
+
+      <div class="field">
+        <label>Claim Amount Total </label>
+        <input type="text" placeholder="Claim Amount Total" formControlName="GROUP_CLAIM_AMOUNT_TOTAL" id="txt_group_claim_details_group_claim_amt_total" readonly>
+      </div>
+
+      <div class="field">
+        <label>Scheme Name </label>
+        <input type="text" placeholder="Scheme Name" formControlName="SCHEME_NAME" id="txt_group_claim_details_scheme_name" readonly>
+      </div>
+
+      <div class="field">
+        <label>Scheme Id </label>
+        <input type="text" placeholder="Scheme Id" formControlName="SCHEME_ID" id="txt_group_claim_details_scheme_id" readonly>
+      </div>
+
+      <div class="field">
+        <label>Per Chassis Claim Limit </label>
+        <input type="text" placeholder="Per Chassis Claim Limit" formControlName="PER_CHASSIS_CLAIM_LIMIT" id="txt_group_claim_details_per_chassis_claim_limit" readonly>
+      </div>
+    </div>
+  </div>
+  
+  <div class="ui divider"></div>
+
+  <div class="row" style="margin-top: 20px!important;">
+    <div id="groupDetailsActiveTab" class="ui top attached tabular menu">
+      <a id="claimDetailsTab" class="active item" data-tab="claimDetailsDataTab">Claim Details</a>
+      <a id="otherDetailsTab" class="item" data-tab="otherDetailsDataTab">Other Details</a>
+    </div>
+
+    <div id="claimDetailsTableTab" class="ui bottom attached tab segment active claimDetailsDataTab" data-tab="claimDetailsDataTab">
+      <div class="row">
+        <div class="inline fields">
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="cbk_group_claim_details_type" (change)="checkboxChange()" checked="checked" value="true">
+              <label>Add New Chassis</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="cbk_group_claim_details_type" (change)="checkboxChange()" value="false">
+              <label>Add Existing Claim</label>
+            </div>
+          </div>
+          <div class="field" *ngIf="isChassis">
+            <input type="text" placeholder="Chassis No" id="txt_group_claim_details_cbk_chassis_no">
+          </div>
+          <div class="field" *ngIf="!isChassis">
+            <div class="ui icon input">
+              <input type="text" placeholder="Claim Id" id="txt_group_claim_details_cbk_claim_id" readonly><i class="search icon link" (click)="openExistingIndividualClaim()"></i>
+            </div>
+          </div>
+          <div class="field">
+            <button class="ui button light_indigo_btn" (click)="checkIRNCancelButtonVisibility('add')"> Add </button>
+          </div>
+          <div class="field">
+            <div class="ui buttons">
+              <button class="ui button light_indigo_btn" style="margin-right: 10px;" *ngIf="isGenerateIRNInvoiceButton" (click)="generateIRNAndInvoice()"> Generate Invoice & IRN </button>
+              <button class="ui button light_indigo_btn" style="margin-right: 10px;" *ngIf="isDownloadInvoiceButton || isGenerateInvoiceButton" (click)="donwloadInvoice()"> Download GST Invoice </button>
+              <button class="ui button light_indigo_btn" style="margin-right: 10px;" *ngIf="isCancelIRNButton" (click)="cancelIRN()"> Cancel IRN </button>
+              <button class="ui button light_indigo_btn" style="margin-right: 10px;" *ngIf="isGenerateCreditNoteButton" (click)="generateCreditNote()"> Generate Credit Note </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="groupClaimDetailsObj" [loading]="groupClaimDetailsLoading" styleClass="p-datatable-striped" [(selection)]="selectedIndividualClaims" [rowHover]="true" id="groupClaimDetailsTable">
+            <ng-template pTemplate="caption">
+              <div class="p-d-flex">
+                <button type="button" pButton (click)="checkIRNCancelButtonVisibility('untag')" class="p-button-danger p-mr-2 sticky-column-btn-one" pTooltip="Untag Claim" tooltipPosition="bottom" [disabled]="!isUnTag">Un-Tag</button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <td style="width: 3rem" [ngClass]="groupClaimDetailsLoading == true ? '' : 'sticky-column'"></td>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="groupClaimDetailsLoading == true ? '' : 'sticky-column-second'">Claim Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Final Claim Amount</th>
+                <!-- <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Used Flat Discount</th> -->
+                <!-- <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Available Flat Discount</th> -->
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Business Unit</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Customer Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis Business Unit</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">LOB</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">PPL</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">PL</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">VC</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">VC Category</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Invoice No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Invoice Date</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">TM Invoice No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">TM Invoice Date</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Manufacturing Date</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice Date</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="break">IRN</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Acknowledgement No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Acknowledgement Date</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Stock Transfer</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Delivery Status</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupClaimDetailsItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="groupClaimDetailsLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimDetailsItem" (click)="toggleCheckbox()"></p-tableCheckbox></td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;" class="toggle-button" [ngClass]="groupClaimDetailsLoading == true ? '' : 'sticky-column-second'">{{ groupClaimDetailsItem.claim_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.chassis_NO }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">
+                  <input pInputText type="number" id="txt_group_claim_details_claim_amount_{{ i }}" min="0" (keyup)="isValidNumber($event, i, 1)" (focusout)="checkIRNCancelButtonVisibility('amountchange')" (blur)="validate(groupClaimDetailsItem.claim_ID, groupClaimDetailsItem.chassis_NO, i)" value="{{ groupClaimDetailsItem.claim_AMOUNT_ORG }}" required>
+                </td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.claim_AMOUNT }}</td>
+                <!-- <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.used_FLAT_DISC }}</td> -->
+                <!-- <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.avail_FLAT_DISC }}</td> -->
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.bu_ID }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.cust_NAME }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.chassi_BU }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.lob }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.ppl }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.pl }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.vc }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.vc_CATEGORY }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.dlr_INV_NO }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.dlr_INV_DATE | date: "dd-MMM-yyyy" }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.tm_INV_NO }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.tm_INV_DT | date: "dd-MMM-yyyy" }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.manf_DATE | date: "dd-MMM-yyyy" }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.gst_INV_NO }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.gst_INV_DT | date: "dd-MMM-yyyy" }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;" class="break">{{ groupClaimDetailsItem.irn_NUMBER }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.acknowledgement_NO }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.acknowledgement_DATE | date: "dd-MMM-yyyy" }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.stock_TRANSFER }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimDetailsItem.delivery_STATUS }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="21">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="otherDetailsTableTab" class="ui bottom attached tab segment otherDetailsDataTab" data-tab="otherDetailsDataTab">
+      <div class="row" [formGroup]="groupClaimOtherDetailsForm">
+        <div class="four fields">
+          <div class="field">
+            <label>Dealer Business Unit </label>
+            <input type="text" placeholder="Dealer Business Unit" formControlName="DEALER_BUSINESS_UNIT" id="txt_group_claim_details_dealer_bu" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Code </label>
+            <input type="text" placeholder="Dealer Code" formControlName="DEALER_CODE" id="txt_group_claim_details_dealer_code" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Name </label>
+            <input type="text" placeholder="Dealer Name" formControlName="DEALER_NAME" id="txt_group_claim_details_dealer_name" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Location </label>
+            <input type="text" placeholder="Dealer Location" formControlName="DEALER_LOCATION" id="txt_group_claim_details_dealer_location" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Dealer Region </label>
+            <input type="text" placeholder="Dealer Region" formControlName="DEALER_REGION" id="txt_group_claim_details_dealer_region" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Area </label>
+            <input type="text" placeholder="Dealer Area" formControlName="DEALER_AREA" id="txt_group_claim_details_dealer_area" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Zone </label>
+            <input type="text" placeholder="Dealer Name" formControlName="DEALER_ZONE" id="txt_group_claim_details_dealer_zone" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Chassis Business Unit </label>
+            <input type="text" placeholder="Chassis Business Unit" formControlName="CHASSIS_BUSINESS_UNIT" id="txt_group_claim_details_chassis_bu" readonly>
+          </div>
+
+          <div class="field">
+            <label>LOB </label>
+            <input type="text" placeholder="LOB" formControlName="LOB" id="txt_group_claim_details_lob" readonly>
+          </div>
+
+          <div class="field">
+            <label>PPL </label>
+            <input type="text" placeholder="PPL" formControlName="PPL" id="txt_group_claim_details_ppl" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>IRN </label>
+            <input type="text" placeholder="IRN" formControlName="IRN" id="txt_group_claim_details_irn" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Acknowledgement No </label>
+            <input type="text" placeholder="Acknowledgement No" formControlName="ACKNOWLEDGEMENT_NO" id="txt_group_claim_details_acknowledgement_no" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Acknowledgement Date </label>
+            <div class="ui calendar" id="cal_group_claim_details_acknowledgement_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_group_claim_details_acknowledgement_date" type="text" placeholder="Acknowledgement Date" class='datepicker' autocomplete="off" formControlName="ACKNOWLEDGEMENT_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+    
+          <div class="field">
+            <label>GST Invoice No </label>
+            <input type="text" placeholder="GST Invoice No" formControlName="GST_INVOICE_NO" id="txt_group_claim_details_gst_invoice_no" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>GST Invoice Date </label>
+            <div class="ui calendar" id="cal_group_claim_details_gst_invoice_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_group_claim_details_gst_invoice_date" type="text" placeholder="GST Invoice Date" class='datepicker' autocomplete="off" formControlName="GST_INVOICE_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class='four fields' [formGroup]="groupClaimOtherDetailsForm">
+    <div class="field">
+      <label>Action <span class="required">*</span></label>
+      <select class='ui dropdown selection' id="dd_group_claim_details_action" formControlName="ACTION">
+        <option value="">Action</option>
+        <option *ngFor="let actionitem of actionList" value="{{ actionitem.action }}">{{ actionitem.act_DESC }}</option>
+      </select>
+      <div class="error-message" *ngIf="groupClaimOtherDetailsForm.controls.ACTION.errors?.required && groupClaimOtherDetailsForm.controls.ACTION.touched">Action Required</div>
+    </div>
+
+    <div class="field">
+      <label>Remark <span class="required">*</span></label>
+      <input type="text" placeholder="Remark" id="dd_group_claim_details_remarks" formControlName="REMARK" autocomplete="off">
+      <div class="error-message" *ngIf="groupClaimOtherDetailsForm.controls.REMARK.errors?.required && groupClaimOtherDetailsForm.controls.REMARK.touched">Remark Required</div>
+    </div>
+
+    <div class="field">
+      &nbsp;
+    </div>
+
+    <div class="field" style="text-align: right;">
+      <label>&nbsp;</label>
+      <div class="ui buttons">
+        <button class="ui button green_btn" style="margin-right: 10px;" (click)="checkSaveGroup()"> <i class="check icon"> </i> &nbsp; Save </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_existing_individual_claim'>
+    <div class="header">
+      Individual Claim
+    </div>
+    <i class="close icon" (click)='closeExistingIndividualClaim()'></i>
+    <div class="scrolling content ui form">
+      <form>
+        <p-toast position="top-right" key="existingIndividualClaimMessage"></p-toast>
+
+        <div class="row">
+          <div class="sixteen wide field box-shadow-custom table-responsive">
+            <p-table [value]="existingIndividualClaimObj" [loading]="existingIndividualClaimLoading" styleClass="p-datatable-striped" [rowHover]="true" id="existingIndividualClaimTable">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Type</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Block Flag</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Remark</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created On</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-existingIndividualClaimItem let-i="rowIndex">
+                <tr (click)="selectExistingIndividualClaim(existingIndividualClaimItem)" style="cursor: pointer;">
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.claim_ID }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.chassis_NO }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.scheme_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.scheme_ID }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.claim_TYPE }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.cust_ROLE }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.st_DESC }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.block_FLAG }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.remarks }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ existingIndividualClaimItem.created_ON }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="10">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui large modal coupled" id='modal_group_details_initial_validation'>
+    <div class="header">
+      Initial Validation Failed
+    </div>
+    <i class="close icon" (click)='closeGroupInitialValidation()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <div class="sixteen wide field">
+          <p-table class="box-shadow-custom" [value]="groupInitialValidationObj" styleClass="p-datatable-striped" [rowHover]="true" id="groupInitialValidationTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 81vw;white-space: break-spaces;" class='text-center'>Validation Message</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupInitialValidationItem let-i="rowIndex">
+              <tr>
+                <td style="width: 81vw;white-space: break-spaces;">{{ groupInitialValidationItem }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="1">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

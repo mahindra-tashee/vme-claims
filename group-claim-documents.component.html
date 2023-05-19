@@ -1,0 +1,179 @@
+<p-toast position="top-right" key="groupClaimDocumentMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <p-confirmDialog [style]="{width: '50vw'}" key="groupDocumentDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row">
+    <div id="groupDocumentActiveTab" class="ui top attached tabular menu">
+      <a id="groupDocumentTab" class="active item" data-tab="groupDocumentDataTab">Group Document</a>
+      <a id="groupChassisDocumentTab" class="item" data-tab="groupChassisDocumentDataTab">Chassis Wise Document</a>
+    </div>
+
+    <div id="groupDocumentTableTab" class="ui bottom attached tab segment active groupDocumentDataTab" data-tab="groupDocumentDataTab">
+      <div class="row" style="margin-top: 20px;margin-bottom: 10px;" [formGroup]="groupDocumentForm">
+        <div class="two fields">
+          <div class="field">
+            <label>Document Type</label>
+            <select class='ui selection dropdown' id="dd_group_document_document_type" formControlName="DOCUMENT">
+              <option selected disabled value="">Document Type</option>
+              <option *ngFor="let groupDocumentTypeItem of groupDocumentTypeList" value="{{ groupDocumentTypeItem.seq_ID }}">{{ groupDocumentTypeItem.document_NAME }}</option>
+            </select>
+            <div class="error-message" *ngIf="groupDocumentForm.controls.DOCUMENT.errors?.required && groupDocumentForm.controls.DOCUMENT.touched">Document Type Required</div>
+          </div>
+    
+          <div class="field">
+            <label>Document Upload</label>
+            <input class="ui input focus" id="file_group_document" type="file" (change)="chooseGroupDocumentFile($event)">
+          </div>
+    
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" class="ui button light_indigo_btn" (click)="uploadGroupDocumentFile()" [disabled]="!isGroupDocumentFile">
+              <i class="upload icon"></i>Upload Document
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="groupClaimDocumentObj" [loading]="groupClaimDocumentLoading" styleClass="p-datatable-striped" [rowHover]="true" id="groupClaimDocumentTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Group Claim Id</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Auto Verified</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupDocumentItem>
+              <tr>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentItem.doc_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentItem.g_CLAIM_ID }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ groupDocumentItem.document_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadGroupDocument(groupDocumentItem)" style="cursor: pointer;" class="toggle-button">{{ groupDocumentItem.document_NAME }}</a>
+                </td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupDocumentItem.is_AUTO_VERIFIED }}</td>
+                <td style="width: 210px!important;min-width: 210px;;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadGroupDocument(groupDocumentItem)"></button>
+                  <button type="button" pButton pRipple icon="pi pi-trash" pTooltip="Delete File" tooltipPosition="bottom" class="p-button-danger p-mr-2" style="margin-left: 20px;" (click)="deleteGroupClaimDocument(groupDocumentItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="groupChassisDocumentTableTab" class="ui bottom attached tab segment groupChassisDocumentDataTab" data-tab="groupChassisDocumentDataTab">
+      <div class="row" style="margin-top: 20px;margin-bottom: 10px;" [formGroup]="groupChassisDocumentForm">
+        <div class="two fields">
+          <div class="field">
+            <label>Claim Id</label>
+            <select class='ui selection dropdown' id="dd_group_chassis_document_claim_id" formControlName="CLAIM_ID">
+              <option selected disabled value="">Claim Id</option>
+              <option *ngFor="let groupChassisClaimIdItem of groupChassisClaimIdList" value="{{ groupChassisClaimIdItem.claim_ID }}">{{ groupChassisClaimIdItem.claim_ID }}</option>
+            </select>
+            <div class="error-message" *ngIf="groupChassisDocumentForm.controls.CLAIM_ID.errors?.required && groupChassisDocumentForm.controls.CLAIM_ID.touched">Claim Id Required</div>
+          </div>
+
+          <div class="field">
+            <label>Document Type</label>
+            <select class='ui selection dropdown' id="dd_group_chassis_document_document_type" formControlName="DOCUMENT">
+              <option selected disabled value="">Document Type</option>
+              <option *ngFor="let groupChassisDocumentTypeItem of groupChassisDocumentTypeList" value="{{ groupChassisDocumentTypeItem.seq_ID }}">{{ groupChassisDocumentTypeItem.document_TYPE }}</option>
+            </select>
+            <div class="error-message" *ngIf="groupChassisDocumentForm.controls.DOCUMENT.errors?.required && groupChassisDocumentForm.controls.DOCUMENT.touched">Document Type Required</div>
+          </div>
+    
+          <div class="field">
+            <label>Document Upload</label>
+            <input class="ui input focus" id="file_group_chassis_document" type="file" (change)="chooseGroupChassisDocumentFile($event)">
+          </div>
+    
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" class="ui button light_indigo_btn" (click)="uploadGroupChassisDocumentFile()" [disabled]="!isGroupChassisDocumentFile">
+              <i class="upload icon"></i>Upload Document
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="groupChassisDocumentObj" [loading]="groupChassisDocumentLoading" styleClass="p-datatable-striped" [rowHover]="true" id="groupChassisDocumentTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupChassisDocumentItem>
+              <tr>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupChassisDocumentItem.DOC_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupChassisDocumentItem.CLAIM_ID }}</td>
+                <td style="width: 250px!important;min-width: 250px;white-space: break-spaces;">{{ groupChassisDocumentItem.CHASSIS_NO }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ groupChassisDocumentItem.DOCUMENT_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadIndividualDocument(groupChassisDocumentItem)" style="cursor: pointer;" class="toggle-button">{{ groupChassisDocumentItem.DOCUMENT_NAME }}</a>
+                </td>
+                <td style="width: 210px!important;min-width: 210px;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadIndividualDocument(groupChassisDocumentItem)"></button>
+                  <button type="button" pButton pRipple icon="pi pi-trash" pTooltip="Delete File" tooltipPosition="bottom" class="p-button-danger p-mr-2" style="margin-left: 20px;" (click)="deleteIndividualDocument(groupChassisDocumentItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class='four fields' [formGroup]="groupSubmitForm">
+    <div class="field">
+      <label>Action <span class="required">*</span></label>
+      <select class='ui dropdown selection' id="dd_group_document_action" formControlName="ACTION">
+        <option value="">Action</option>
+        <option *ngFor="let actionitem of actionList" value="{{ actionitem.action }}">{{ actionitem.act_DESC }}</option>
+      </select>
+      <div class="error-message" *ngIf="groupSubmitForm.controls.ACTION.errors?.required && groupSubmitForm.controls.ACTION.touched">Action Required</div>
+    </div>
+
+    <div class="field">
+      <label>Remark <span class="required">*</span></label>
+      <input type="text" placeholder="Remark" id="dd_group_document_remarks" formControlName="REMARK" autocomplete="off">
+      <div class="error-message" *ngIf="groupSubmitForm.controls.REMARK.errors?.required && groupSubmitForm.controls.REMARK.touched">Remark Required</div>
+    </div>
+
+    <div class="field">
+      &nbsp;
+    </div>
+
+    <div class="field" style="text-align: right;">
+      <label>&nbsp;</label>
+      <div class="ui buttons">
+        <button class="ui button green_btn" style="margin-right: 10px;" (click)="updateGroupCustody()"> <i class="check icon"> </i> &nbsp; Save </button>
+      </div>
+    </div>
+  </div>
+</form>

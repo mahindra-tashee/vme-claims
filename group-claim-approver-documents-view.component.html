@@ -1,0 +1,92 @@
+<p-toast position="top-right" key="groupClaimApproverDocumentsViewMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <p-confirmDialog [style]="{width: '50vw'}" key="groupClaimApproverDocumentsViewDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row">
+    <div id="groupClaimApproverDocumentsViewActiveTab" class="ui top attached tabular menu">
+      <a id="groupClaimApproverDocumentsViewTab" class="active item" data-tab="groupClaimApproverDocumentsViewDataTab">Group Document</a>
+      <a id="chassisApproverDocumentsViewTab" class="item" data-tab="chassisApproverDocumentsViewDataTab">Chassis Wise Document</a>
+    </div>
+
+    <div id="groupClaimApproverDocumentsViewTableTab" class="ui bottom attached tab segment active groupClaimApproverDocumentsViewDataTab" data-tab="groupClaimApproverDocumentsViewDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+          <p-table [value]="groupClaimApproverDocumentsViewObj" [loading]="groupClaimApproverDocumentsViewLoading" styleClass="p-datatable-striped" [(selection)]="selectedGroupDocuments" [rowHover]="true" id="groupClaimApproverDocumentsViewTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimApproverDocumentsViewLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isGroupClaimApproverDocumentsViewObj" [disabled]="!isGDCChecker" (click)="getSelectedGroupDocumentId()"></p-tableHeaderCheckbox></th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Group Claim Id</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Auto Validated</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupClaimApproverDocumentsViewItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="groupClaimApproverDocumentsViewLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimApproverDocumentsViewItem" [disabled]="!isGDCChecker" (click)="getSelectedGroupDocumentId()"></p-tableCheckbox></td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsViewItem.doc_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsViewItem.g_CLAIM_ID }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ groupClaimApproverDocumentsViewItem.document_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadGroupDocument(groupClaimApproverDocumentsViewItem)" style="cursor: pointer;" class="toggle-button">{{ groupClaimApproverDocumentsViewItem.document_NAME }}</a>
+                </td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDocumentsViewItem.is_AUTO_VERIFIED }}</td>
+                <td style="width: 200px!important;min-width: 200px;;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadGroupDocument(groupClaimApproverDocumentsViewItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="chassisApproverDocumentsViewTableTab" class="ui bottom attached tab segment chassisApproverDocumentsViewDataTab" data-tab="chassisApproverDocumentsViewDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom table-responsive">
+          <p-table [value]="chassisApproverDocumentsViewObj" [loading]="chassisApproverDocumentsViewLoading" styleClass="p-datatable-striped" [(selection)]="selectedChassisDocuments" [rowHover]="true" id="chassisApproverDocumentsViewTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="chassisApproverDocumentsViewLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isChassisApproverDocumentsViewObj" [disabled]="!isGDCChecker" (click)="getSelectedChassisDocumentId()"></p-tableHeaderCheckbox></th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Document Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Type</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Document Name</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class='text-center'>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-chassisApproverDocumentsViewItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="chassisApproverDocumentsViewLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="chassisApproverDocumentsViewItem" [disabled]="!isGDCChecker" (click)="getSelectedChassisDocumentId()"></p-tableCheckbox></td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisApproverDocumentsViewItem.DOC_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ chassisApproverDocumentsViewItem.CLAIM_ID }}</td>
+                <td style="width: 250px!important;min-width: 250px;white-space: break-spaces;">{{ chassisApproverDocumentsViewItem.CHASSIS_NO }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ chassisApproverDocumentsViewItem.DOCUMENT_TYPE }}</td>
+                <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">
+                  <a (click)="downloadIndividualDocument(chassisApproverDocumentsViewItem)" style="cursor: pointer;" class="toggle-button">{{ chassisApproverDocumentsViewItem.DOCUMENT_NAME }}</a>
+                </td>
+                <td style="width: 210px!important;min-width: 210px;white-space: break-spaces;" class='text-center'>
+                  <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadIndividualDocument(chassisApproverDocumentsViewItem)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

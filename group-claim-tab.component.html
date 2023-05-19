@@ -1,0 +1,41 @@
+<p-toast position="top-right" key="claimTabsMessage"></p-toast>
+
+<form class="ui form segment top-section">
+  <div class='row'>
+    <div class="one fields mb-0">
+      <div class="field centered">
+        <div class="ui mini steps" id="section-tabs">
+          <a class="completed active step" id='first'>
+            <div class="content">
+              <div class="title"> Claims Details </div>
+            </div>
+          </a>
+          <a class="step" id='second'>
+            <div class="content">
+              <div class="title"> Documents </div>
+            </div>
+          </a>
+          <span *ngIf="isEdit">
+            <a class="step" id='third'>
+              <div class="content">
+                <div class="title"> Action History </div>
+              </div>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row first-form app-form">
+      <ng-template [ngComponentOutlet]="groupClaimsDetailsLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row second-form app-form">
+      <ng-template [ngComponentOutlet]="groupDocumentsLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row third-form app-form" *ngIf="isEdit">
+      <ng-template [ngComponentOutlet]="groupActionHistoryLazyComp | async"></ng-template>
+    </div>
+  </div>
+</form>

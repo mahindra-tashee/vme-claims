@@ -1,0 +1,56 @@
+<p-toast position="top-right" key="financierDetailsMessage"></p-toast>
+<form [formGroup]="financierDetailsForm">
+  <div class='five fields'>
+    <div class="field">
+      <label>Loan Sanction Amount</label>
+      <input type="text" placeholder="Loan Sanction Amount" id="txt_financier_loan_sanction_amt" formControlName="LOAN_SANCTION_AMT" readonly>
+    </div>
+
+    <div class="field">
+      <label>LTV(Loan to Value Ratio)</label>
+      <input type="text" placeholder="LTV(Loan to Value Ratio)" id="txt_financier_ltv" formControlName="LTV" readonly>
+    </div>
+
+    <div class="field">
+      <label>Loan Tenure</label>
+      <input type="text" placeholder="Loan Tenure" id="txt_financier_loan_tenure" formControlName="LOAN_TENURE" readonly>
+    </div>
+
+    <div class="field">
+      <label>IRR(Interest Rate of Return)</label>
+      <input type="text" placeholder="IRR(Interest Rate of Return)" id="txt_financier_iir" formControlName="IRR" readonly>
+    </div>
+
+    <div class="field">
+      <label>Financier Name </label>
+      <input type="text" placeholder="Financier Name" id="txt_financier_financier_name" formControlName="FINANCIER_NAME"  readonly>
+    </div>
+  </div>
+
+    <div class="five fields">
+      <div class="field">
+        <label>Deliver Order Date</label>
+        <input type="text" placeholder="Deliver Order Date" id="txt_financier_delivery_order_date" formControlName="DELIVERY_ORDER_DATE" readonly>
+      </div>
+
+      <div class="field">
+        <label>Deliver Order No </label>
+        <input type="text" placeholder="Deliver Order No" id="txt_financier_delivery_order_no" formControlName="DELIVERY_ORDER_NO" readonly>
+      </div>
+
+      <div class="field">
+        <label>Order No </label>
+        <input type="text" placeholder="Order No" id="txt_financier_order_no" formControlName="ORDER_NO" readonly>
+      </div>
+
+      <div class="field">
+        <label>EMI</label>
+        <input type="text" placeholder="EMI" id="txt_financier_emi" formControlName="EMI" readonly>
+      </div>
+
+      <div class="field">
+        <label>Chassis No</label>
+        <input type="text" placeholder="Chassis No" id="txt_chassis_no" formControlName="CHASSIS_NO" readonly>
+      </div>
+    </div>
+</form>

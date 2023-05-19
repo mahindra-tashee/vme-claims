@@ -1,0 +1,39 @@
+<p-toast position="top-right" key="groupClaimApproverViewTabsMessage"></p-toast>
+
+<form class="ui form segment top-section">
+  <div class='row'>
+    <div class="one fields mb-0">
+      <div class="field centered">
+        <div class="ui mini steps" id="section-tabs">
+          <a class="completed active step" id='first'>
+            <div class="content">
+              <div class="title"> Claims Details </div>
+            </div>
+          </a>
+          <a class="step" id='second'>
+            <div class="content">
+              <div class="title"> Documents </div>
+            </div>
+          </a>
+          <a class="step" id='third'>
+            <div class="content">
+              <div class="title"> Action History </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row first-form app-form">
+    <ng-template [ngComponentOutlet]="groupClaimApproverDetailsViewLazyComp | async"></ng-template>
+  </div>
+
+  <div class="row second-form app-form">
+    <ng-template [ngComponentOutlet]=" groupClaimApproverDocumentViewLazyComp | async"></ng-template>
+  </div>
+
+  <div class="row third-form app-form">
+    <ng-template [ngComponentOutlet]="groupClaimApproverActionHistoryLazyComp | async"></ng-template>
+  </div>
+</form>

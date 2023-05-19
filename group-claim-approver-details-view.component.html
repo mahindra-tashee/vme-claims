@@ -1,0 +1,200 @@
+<p-toast position="top-right" key="groupClaimApproverDetailsViewMessage"></p-toast>
+
+<form class="ui form secondary segment top-section">
+  <p-confirmDialog [style]="{width: '50vw'}" key="groupClaimApproverDetailsViewDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row" [formGroup]="groupClaimApproverDetailsViewForm">
+    <div class="five fields">
+      <div class="field">
+        <label>Group Claim ID </label>
+        <input type="text" placeholder="Group Claim Id" formControlName="GROUP_CLAIM_ID" id="txt_group_claim_approver_details_view_group_claim_id" readonly>
+      </div>
+
+      <div class="field">
+        <label>Claim Amount Total </label>
+        <input type="text" placeholder="Claim Amount Total" formControlName="GROUP_CLAIM_AMOUNT_TOTAL" id="txt_group_claim_approver_details_view_group_claim_amt_total" readonly>
+      </div>
+
+      <div class="field">
+        <label>Scheme Name </label>
+        <input type="text" placeholder="Scheme Name" formControlName="SCHEME_NAME" id="txt_group_claim_approver_details_view_scheme_name" readonly>
+      </div>
+
+      <div class="field">
+        <label>Scheme Id </label>
+        <input type="text" placeholder="Scheme Id" formControlName="SCHEME_ID" id="txt_group_claim_approver_details_view_scheme_id" readonly>
+      </div>
+
+      <div class="field">
+        <label>Per Chassis Claim Limit </label>
+        <input type="text" placeholder="Per Chassis Claim Limit" formControlName="PER_CHASSIS_CLAIM_LIMIT" id="txt_group_claim_approver_details_view_per_chassis_claim_limit" readonly>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class="row" style="margin-top: 20px!important;">
+    <div id="groupApproverDetailsViewActiveTab" class="ui top attached tabular menu">
+      <a id="claimApproverDetailsViewTab" class="active item" data-tab="claimApproverDetailsViewDataTab">Claim Details</a>
+      <a id="otherApproverDetailsViewTab" class="item" data-tab="otherApproverDetailsViewDataTab">Other Details</a>
+    </div>
+
+    <div id="claimApproverDetailsViewTableTab" class="ui bottom attached tab segment active claimApproverDetailsViewDataTab" data-tab="claimApproverDetailsViewDataTab">
+      <div class='row' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class="sixteen wide field box-shadow-custom">
+          <p-table [value]="groupClaimApproverDetailsViewObj" [loading]="groupClaimApproverDetailsViewLoading" styleClass="p-datatable-striped" [rowHover]="true" id="groupClaimApproverDetailsViewTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="groupClaimApproverDetailsViewLoading == true ? '' : 'sticky-column'">Claim Id</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Claim Amount</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Used Flat Discount</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Final Claim Amount</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Business Unit</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Customer Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis Business Unit</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">LOB</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">PPL</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">PL</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">VC</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">VC Category</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Dealer Invoice No</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Dealer Invoice Date</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">TM Invoice No</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">TM Invoice Date</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Stock Transfer</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Delivery Status</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Manufacturing Date</th>
+                <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Remark</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupClaimApproverDetailsViewItem>
+              <tr>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;" class="toggle-button" [ngClass]="groupClaimApproverDetailsViewLoading == true ? '' : 'sticky-column'">{{ groupClaimApproverDetailsViewItem.claim_ID }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.chassis_NO }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.claim_AMOUNT_ORG }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.used_FLAT_DISC }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.claim_AMOUNT }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.bu_ID }}</td> 
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.cust_NAME }}</td>
+                <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.chassi_BU }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.lob }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.ppl }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.pl }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.vc }}</td> 
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.vc_CATEGORY }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.dlr_INV_NO }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.dlr_INV_DATE | date: "dd-MMM-yyyy" }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.tm_INV_NO }}</td> 
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.tm_INV_DT | date: "dd-MMM-yyyy" }}</td> 
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.stock_TRANSFER }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.delivery_STATUS }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.manf_DATE | date: "dd-MMM-yyyy" }}</td>
+                <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupClaimApproverDetailsViewItem.remarks }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="21">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div id="otherApproverDetailsViewTableTab" class="ui bottom attached tab segment otherApproverDetailsViewDataTab" data-tab="otherApproverDetailsViewDataTab">
+      <div class="row" [formGroup]="groupClaimOtherApproverDetailsViewForm">
+        <div class="four fields">
+          <div class="field">
+            <label>Dealer Business Unit </label>
+            <input type="text" placeholder="Dealer Business Unit" formControlName="DEALER_BUSINESS_UNIT" id="txt_group_claim_approver_details_view_dealer_bu" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Code </label>
+            <input type="text" placeholder="Dealer Code" formControlName="DEALER_CODE" id="txt_group_claim_approver_details_view_dealer_code" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Name </label>
+            <input type="text" placeholder="Dealer Name" formControlName="DEALER_NAME" id="txt_group_claim_approver_details_view_dealer_name" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Location </label>
+            <input type="text" placeholder="Dealer Location" formControlName="DEALER_LOCATION" id="txt_group_claim_approver_details_view_dealer_location" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Dealer Region </label>
+            <input type="text" placeholder="Dealer Region" formControlName="DEALER_REGION" id="txt_group_claim_approver_details_view_dealer_region" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Area </label>
+            <input type="text" placeholder="Dealer Area" formControlName="DEALER_AREA" id="txt_group_claim_approver_details_view_dealer_area" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Dealer Zone </label>
+            <input type="text" placeholder="Dealer Name" formControlName="DEALER_ZONE" id="txt_group_claim_approver_details_view_dealer_zone" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Chassis Business Unit </label>
+            <input type="text" placeholder="Chassis Business Unit" formControlName="CHASSIS_BUSINESS_UNIT" id="txt_group_claim_approver_details_view_chassis_bu" readonly>
+          </div>
+
+          <div class="field">
+            <label>LOB </label>
+            <input type="text" placeholder="LOB" formControlName="LOB" id="txt_group_claim_approver_details_view_lob" readonly>
+          </div>
+
+          <div class="field">
+            <label>PPL </label>
+            <input type="text" placeholder="PPL" formControlName="PPL" id="txt_group_claim_approver_details_view_ppl" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>IRN </label>
+            <input type="text" placeholder="IRN" formControlName="IRN" id="txt_group_claim_approver_details_view_irn" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Acknowledgement No </label>
+            <input type="text" placeholder="Acknowledgement No" formControlName="ACKNOWLEDGEMENT_NO" id="txt_group_claim_approver_details_view_acknowledgement_no" readonly>
+          </div>
+    
+          <div class="field">
+            <label>Acknowledgement Date </label>
+            <div class="ui calendar" id="cal_group_claim_details_view_acknowledgement_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_group_claim_approver_details_view_acknowledgement_date" type="text" placeholder="Acknowledgement Date" class='datepicker' autocomplete="off" formControlName="ACKNOWLEDGEMENT_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+    
+          <div class="field">
+            <label>GST Invoice No </label>
+            <input type="text" placeholder="GST Invoice No" formControlName="GST_INVOICE_NO" id="txt_group_claim_approver_details_view_gst_invoice_no" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>GST Invoice Date </label>
+            <div class="ui calendar" id="cal_group_claim_details_view_gst_invoice_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_group_claim_approver_details_view_gst_invoice_date" type="text" placeholder="GST Invoice Date" class='datepicker' autocomplete="off" formControlName="GST_INVOICE_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,248 @@
+<p-toast position="top-right" key="rejectHoldMessage"></p-toast>
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Reject/Hold Claims </a> </div>
+  <div class='row'>
+    <div class="ui accordion column field" [hidden]="rejectHoldClaims">
+      <div class="title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()" [hidden]="rejectHoldClaims"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" [hidden]="rejectHoldClaims">
+            <label>Template Type</label>
+            <select class="ui dropdown" id='dd_scheduled_reject_hold_claims_search_template_type' required>
+              <option value="" disabled selected hidden>Template Type</option>
+              <option value="REJECT">Reject</option>
+              <option value="HOLD">Hold</option>
+              <option value="UNHOLD">Unhold</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="rejectHoldClaims">
+            <label>Claim Status</label>
+            <select id="dd_scheduled_reject_hold_claims_search_status" class="ui dropdown" required>
+              <option value="" disabled selected hidden>Claim Status</option>
+              <option>TO BE PROCESSED</option>
+              <option>SUCCESSFUL</option>
+              <option>FAILED</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="rejectHoldClaims">
+            <div class="field">
+              <label>Uploaded From Date</label>
+              <div class="ui calendar" id="cal_scheduled_reject_hold_claims_start_date">
+                <div class="ui input left icon">
+                  <i class="calendar icon"></i><input type="text" placeholder="start Date" id="txt_scheduled_reject_hold_claims_start_date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" [hidden]="rejectHoldClaims">
+            <label>Uploaded To Date</label>
+            <div class="ui calendar" id="cal_scheduled_reject_hold_claims_end_date">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i><input type="text" id="txt_scheduled_reject_hold_claims_end_date" placeholder="End Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class='field'>
+            <div class="field pull-right">
+              <label>&nbsp;</label>
+              <div class="ui buttons">
+                <button class="ui button green_btn" id='btn_search' (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id='btn_reset' (click)="clearFilter()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui divider" [hidden]="rejectHoldClaims"></div>
+      </div>
+    </div>
+
+    <div class="five fields" style="margin-left: 10px!important;">
+
+      <div class="field">
+        <label>Registration Type</label>
+        <select class="ui selection dropdown" id='dd_registration_type_selection'>
+          <option value="reject_hold_option">Reject/Unhold Option</option>
+          <option value="reject_hold_batch_upload">Reject/Unhold Batch Upload</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Claim Type</label>
+        <select class="ui dropdown selection search" id='dd_reject_hold_claims_claim_type'>
+          <option value="REJT">Reject</option>
+          <option value="HOLD">Hold</option>
+          <option value="UHLD">Unhold</option>
+        </select>
+      </div>
+
+      <div class="field" [hidden]="!rejectHoldClaims">
+        <label>Upload File</label>
+        <input type='file' id="fileupload" class="ui input focus" placeholder="Select Document to Upload" (change)="chooseClaimFile($event)" />
+      </div>
+
+      <div class="field" [hidden]="rejectHoldClaims">
+        <label>Upload File</label>
+        <input type='file' id="schedulefileupload" class="ui input focus" placeholder="Select Document to Upload" (change)="onFileSelect($event)" />
+      </div>
+
+      <div class='field' [hidden]="!rejectHoldClaims" style="margin-left: 40px!important;">
+        <div class="field pull-right">
+          <label>&nbsp;</label>
+          <div class="ui buttons">
+            <button class="ui light_indigo_btn button" (click)="loadFile()" [disabled]="!isDocumentFileUpload" style="margin-left: 10px!important;"><i class="upload icon"></i>Load & Validate File</button>
+            <button class="ui light_indigo_btn button" (click)="validateUploadClaimFile()" [disabled]="!isDocumentFileloaded" style="margin-left: 10px!important;"><i class="upload icon"></i> Upload File</button>
+            <button class="ui button green_btn" (click)='downloadTemplate()' style="margin-left: 10px!important;"><i  class="download icon"></i>Download Template</button>
+          </div>
+        </div>
+      </div>
+
+      <div class='field' [hidden]="rejectHoldClaims">
+        <div class="field pull-right">
+          <label>&nbsp;</label>
+          <div class="ui buttons">
+            <button class="ui light_indigo_btn button" (click)="validateScheduledFileUpload()" [disabled]="!isDocumentFileloaded" style="margin-left: 10px!important;"> <i class="upload icon"></i> Validate & Upload Claim File</button>
+            <button class="ui button green_btn" (click)="downloadTemplate()" style="margin-left: 10px!important;"><i class="download icon"></i>Download Template</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+      <div class='four wide field page-information' [hidden]="!isRejectHoldClaimObj || rejectHoldClaims">
+        <label>Show </label><span></span>
+        <select (change)="sizeChanged($event)" id="dd_offline_claims_size" class="ui dropdown" required>
+          <option value=10>10</option>
+          <option value=15>15</option>
+          <option value=20>20</option>
+        </select>
+        <label>Entries </label>
+      </div>
+
+      <div class='twelve wide field pagination' *ngIf="isRejectHoldClaimObj">
+        <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+          <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(1)" class="icon item">
+            First
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(pager.currentPage - 1)" class="icon item">
+            Previous
+          </a>
+          <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}"(click)="scheduleSetPage(page)" class="icon item">
+            {{page}}
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.currentPage + 1)" class="icon item">
+            Next
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.totalPages)" class="icon item">
+            Last
+          </a>
+        </div>
+      </div>
+
+      <div class="sixteen wide field" style="margin-bottom: 30px !important;">
+        <p-table class="box-shadow-custom" id="rejectHoldTable" styleClass="p-datatable-striped" [rowHover]="true" [value]="rejectHoldClaimObj" [loading]="rejectHoldClaimLoading">
+          <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+              <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportClaimData()" class="p-button-success p-mr-2 sticky-column-btn-one" pTooltip="Export Claim Data" tooltipPosition="bottom" [disabled]='!isRejectHoldClaimButtonObj'></button>
+              <button type="button" pButton pRipple icon="pi pi-refresh" (click)="clearData()" class="red_btn p-mr-2 sticky-column-btn-two" pTooltip="Clear Data" tooltipPosition="bottom" [disabled]='!isRejectHoldClaimButtonObj'></button>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"[ngClass]="rejectHoldClaimLoading == true ? '' : 'sticky-column'">Claim ID</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">TMLBSL Comment</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [hidden]="rejectHoldClaims">Uploaded By</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [hidden]="rejectHoldClaims">Uploaded Date</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+              <th style="width: 350px!important;min-width: 350px!important;white-space: break-spaces;">Remark</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rejectHoldClaimItem let-i="index">
+            <tr>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button"(click)="openIndividualClaimView(rejectHoldClaimItem.chassis_NO, rejectHoldClaimItem.scheme_ID, rejectHoldClaimItem.claim_ID)" pTooltip="View Claim" tooltipPosition="bottom" [ngClass]="rejectHoldClaimLoading == true ? '' : 'sticky-column'">{{ rejectHoldClaimItem.claim_ID }} </td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{rejectHoldClaimItem.comments}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(rejectHoldClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{rejectHoldClaimItem.chassis_NO}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button break" (click)="openSchemeView(rejectHoldClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom"> {{ rejectHoldClaimItem.scheme_ID }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{rejectHoldClaimItem.dealercode}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{rejectHoldClaimItem.claim_AMT}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [hidden]="rejectHoldClaims"> {{rejectHoldClaimItem.user_ID}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [hidden]="rejectHoldClaims"> {{rejectHoldClaimItem.created_ON | date:"dd-MMM-yyyy  h:mm:ss" }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{rejectHoldClaimItem.status}}</td>
+              <td style="width: 350px!important;min-width: 350px!important;white-space: break-spaces;">{{rejectHoldClaimItem.remarks}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8">No data Available</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;"
+          *ngIf="isRejectHoldClaimObj">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(pager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="scheduleSetPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="ui fullscreen coupled modal" id='model_hold_reject_individual_claim_url_view'>
+  <div class="header">
+    View Individual Claim
+  </div>
+  <i class="close icon" (click)='closeIndividualClaimView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <object type="text/html" [data]="sharedService.individualClaimViewUrl | safe" width="100%"></object>
+    </div>
+  </div>
+</div>
+
+<div class="ui longer fullscreen coupled modal" id='modal_chassis_view'>
+  <div class="header">
+    View Chassis
+  </div>
+  <i class="close icon" (click)='closeChassisView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <ng-template [ngComponentOutlet]="chassisViewTabsLazyComp | async"></ng-template>
+    </div>
+  </div>
+</div>
+
+<div class="ui fullscreen coupled modal" id='model_hold_reject_claims_scheme_url_view'>
+  <div class="header">
+    View Scheme
+  </div>
+  <i class="close icon" (click)='closeSchemeView()'></i>
+  <div class="scrolling content">
+    <div class="body">
+      <object type="text/html" [data]="schemeViewUrl | safe" width="100%"></object>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,337 @@
+<p-toast position="top-right" key="offlineClaimsMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Scheduled Offline Claims </a> </div>
+
+  <div class='row'>
+    <div class="ui accordion column field" [hidden]="offlineClaims">
+      <div class="title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()" [hidden]="offlineClaims"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" [hidden]="offlineClaims">
+            <label>Role</label>
+            <select id="dd_scheduled_offline_claims_role" (change)="getPositions()" placeholder="Select Role"  class="ui dropdown" required>
+              <option [value]="role.ROLE_ID" *ngFor="let role of roles">{{ role.ROLE_DESCRIPTION }}</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="offlineClaims">
+            <label>Position</label>
+            <select id="dd_scheduled_offline_claims_position" placeholder="Select Position" (change)="getbuid()" class="ui dropdown" required>
+              <option *ngFor="let position of positions" [value]="position.position">{{ position.position }}</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="offlineClaims">
+            <label>Business Unit</label>
+            <select id="dd_scheduled_offline_claims_business_unit" placeholder="Select BU_ID" class="ui dropdown" required>
+             <option value="">Business Unit</option>
+              <option [value]="bu.BU" *ngFor="let bu of buid">{{ bu.BU }}</option>
+            </select>
+          </div>
+
+          <div class="field" style="text-align: left;" [hidden]="offlineClaims">
+            <label>Chassis No</label>
+            <input type="text" placeholder="Enter Chassis No (Comma Seperated)" id="txt_scheduled_claims_chassis_no" autocomplete="off">
+          </div>
+       
+
+        <div class="field" [hidden]="offlineClaims">
+          <label>Scheme ID</label>
+          <div class="form-control"><input id="txt_scheduled_claims_scheme_id" type="text" placeholder="Scheme ID">
+          </div>
+        </div>
+      </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" [hidden]="offlineClaims">
+            <label>Dealer Code</label>
+            <div class="form-control"><input id="txt_scheduled_claims_dealer_code" type="text" placeholder="Dealer Code"></div>
+          </div>
+
+          <div class="field" [hidden]="offlineClaims">
+            <label>Claim Status</label>
+            <select id="dd_scheduled_offline_claims_claim_status" placeholder="Select status" class="ui dropdown" required>
+              <option value="" disabled selected hidden>Claim Status</option>
+              <option>TO BE PROCESSED</option>
+              <option>SUCCESSFUL</option>
+              <option>FAILED</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="offlineClaims">
+            <label>Uploaded From Date</label>
+            <div class="ui calendar" id="cal_scheduled_offline_claims_start_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_scheduled_offline_claims_start_date" type="text" placeholder="Start Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+
+          <div class="field" [hidden]="offlineClaims">
+            <label>Uploaded To Date</label>
+            <div class="ui calendar" id="cal_scheduled_offline_claims_end_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="EndDate" id="txt_scheduled_offline_claims_end_date" type="text" placeholder="End Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+          <div class='field' style="text-align: right;" [hidden]="offlineClaims">
+            <div class="field">
+              <div class="ui buttons">
+                <button class="ui button green_btn" id='btn_search' (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id='btn_reset' (click)="clearFilter()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui divider" [hidden]="offlineClaims"></div>
+
+    <div class="five fields" style="margin-left: 10px!important;">
+      <div class="field">
+        <label>Registration Type</label>
+        <select class="ui selection dropdown" id='dd_registration_type_selection'>
+          <option value="offlineclaim">Offline Claims</option>
+          <option value="scheduledofflineclaim">Scheduled Offline Claims</option>
+        </select>
+      </div>
+
+      <div class="field" [hidden]="!offlineClaims">
+        <label>Claim Type</label>
+        <select class="ui dropdown selection search" id='dd_offline_claims_claim_type'>
+          <option value="PRE_SETTLE">Offline Pre-Settlement</option>
+          <option value="POST_SETTLE">Offline Post-Settlement</option>
+        </select>
+      </div>
+
+      <div class="field" [hidden]="offlineClaims">
+        <label>Claim Type</label>
+        <select class="ui dropdown selection search" id='dd_scheduled_offline_claims_claim_type'>
+          <option value="ONBEHLF">Offline Pre-Settlement</option>
+          <option value="OFFLINE">Offline Post-Settlement</option>
+        </select>
+      </div>
+
+      <div class="field" [hidden]="!offlineClaims">
+        <label>Offline Bulk Upload</label>
+        <input type='file' id="fileupload"  class="ui input focus" placeholder="Select Document to Upload" (change)="chooseClaimFile($event)" />
+      </div>
+
+      <div class="field" [hidden]="offlineClaims">
+        <label>Scheduled Bulk Upload</label>
+        <input type='file' id="schedulefileupload"  class="ui input focus" placeholder="Select Document to Upload" (change)="onFileSelect($event)" />
+      </div>
+
+      <div class='field' style="text-align: right;" [hidden]="!offlineClaims">
+        <label>&nbsp;</label>
+        <div class="field">
+          <div class="ui buttons">
+            <button class="ui button light_indigo_btn" (click)="uploadClaimFile()" [disabled]="!isDocumentFileUpload"> <i class="upload icon"></i> Upload Claim File</button>
+            <button class="ui button green_btn" style="margin-left: 10px;" (click)='downloadTemplate()'><i class="material-icons"></i> Download Template</button>
+          </div>
+        </div>
+      </div>
+
+      <div class='field' style="text-align: right;" [hidden]="offlineClaims">
+        <label>&nbsp;</label>
+        <div class="field">
+          <div class="ui buttons">
+            <button class="ui button light_indigo_btn" (click)="scheduledFileUpload()" [disabled]="!isDocumentFileUpload"> <i class="upload icon"></i> Upload Claim File</button>
+            <button class="ui button green_btn" style="margin-left: 10px;" (click)="templatedownload()" ><i class="download icon"></i> Download Template</button>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+    <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;" [hidden]="offlineClaims">
+      <div class='four wide field page-information'  [hidden]="offlineClaims || !isScheduledClaimsObj"> 
+        <label>Show </label><span></span>
+        <select (change)="sizeChanged($event)" id="dd_offline_claims_size" class="ui dropdown" required>
+          <option value=10>10</option>
+          <option value=25>25</option>
+          <option value=50>50</option>
+          <option value=100>100</option>
+        </select>
+        <label>Entries </label>
+      </div>
+
+      <div class='twelve wide field pagination' *ngIf="isScheduledClaimsObj" [hidden]="offlineClaims">
+        <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+          <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(1)" class="icon item">
+            First
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(pager.currentPage - 1)" class="icon item">
+            Previous
+          </a>
+          <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="scheduleSetPage(page)" class="icon item">
+            {{page}}
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.currentPage + 1)" class="icon item">
+            Next
+          </a>
+          <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.totalPages)"        class="icon item">
+            Last
+          </a>
+        </div>
+      </div>
+
+      <div class="sixteen wide field" style="margin-bottom: 30px !important;" [hidden]="offlineClaims">
+        <p-table class="box-shadow-custom" id="scheduledofflineClaimTable" styleClass="p-datatable-striped" [rowHover]="true" [value]="scheduledOfflineObj" [hidden]="offlineClaims" [loading]="scheduledOfflineClaimLoading" [(selection)]="selectedScheduledClaims">
+          <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+              <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportScheduleClaimData()" class="p-button-success p-mr-2 sticky-column-btn-one" pTooltip="Export Scheduled Claims Data" tooltipPosition="bottom" [disabled]="!isScheduledClaimsObj"></button>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID </th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim  Amount</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Uploaded By  </th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Uploaded Date</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim ID</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+              <th style="width: 330px!important;min-width: 150px!important;white-space: break-spaces;">Remark</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice No</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GST Invoice Date(DD-MMM-YY)</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Comments</th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Type </th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Last Modified By </th>
+              <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Last Modified Date </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-scheduledClaimItem>
+            <tr>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(scheduledClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ scheduledClaimItem.chassis_NO }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(scheduledClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">  {{ scheduledClaimItem.scheme_ID }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ scheduledClaimItem.claim_AMT }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.user_ID}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.created_ON| date:"dd-MMM-yyyy  h:mm:ss"}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ scheduledClaimItem.claim_ID}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.status}}</td>
+              <td style="width: 330px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.message}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.dealercode }}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.gst_INV_NO}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.gst_INV_DT| date:"dd-MMM-yyyy  h:mm:ss"}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.comments}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.claim_TYPE}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.lastModified_By}}</td>
+              <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{scheduledClaimItem.updated_ON| date:"dd-MMM-yyyy  h:mm:ss"}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="10" class="no-data-available">No data Available</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isScheduledClaimsObj" [hidden]="offlineClaims">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="scheduleSetPage(pager.currentPage - 1)"
+              class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="scheduleSetPage(page)"
+              class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.currentPage + 1)"
+              class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="scheduleSetPage(pager.totalPages)"
+              class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sixteen wide field" style="margin-bottom: 30px !important;" [hidden]="!offlineClaims">
+    <p-table class="box-shadow-custom" id="offlineTable" styleClass="p-datatable-striped" [rowHover]="true" [value]="offlineClaimObj" [(selection)]="selectedClaims" [loading]="offlineClaimLoading">
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportOfflineClaimData()" class="p-button-success p-mr-2 sticky-column-btn-one" pTooltip="Export Claim Data" tooltipPosition="bottom" [disabled]='!isOfflineClaims'></button>
+        </div>
+        </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 150px!important;white-space: break-spaces;">Chassis No </th>
+          <th style="width: 150px!important;white-space: break-spaces;">Scheme Id </th>
+          <th style="width: 150px!important;white-space: break-spaces;">Claim Amount</th>
+          <th style="width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+          <th style="width: 150px!important;white-space: break-spaces;">GST Invoice No</th>
+          <th style="width: 150px!important;white-space: break-spaces;">GST Invoice Date</th>
+          <th style="width: 150px!important;white-space: break-spaces;">Settlement Reference No</th>
+          <th style="width: 150px!important;white-space: break-spaces;">GDC Comment</th>
+          <th style="width: 150px!important;white-space: break-spaces;">SAP Document No</th>
+          <th style="width: 150px!important;white-space: break-spaces;">SAP Document Date</th>
+          <th style="width: 150px!important;white-space: break-spaces;">Claim Id</th>
+          <th style="width: 150px!important;white-space: break-spaces;">Status</th>
+          <th style="width: 220px!important;white-space: break-spaces;">Remarks</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-offlineClaimItem let-i="index">
+        <tr>
+          <td style="width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(offlineClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{offlineClaimItem.chassis_NO}}</td>     
+          <td style="width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(offlineClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{offlineClaimItem.scheme_ID}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.claim_AMOUNT}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.dealer_CODE}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.gst_INV_NO}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.gst_INV_DT| date:"dd-MMM-yyyy  h:mm:ss"}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.settlement_REF_NO}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.comments}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.sap_DOC_NO}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.sap_DOC_DATE| date:"dd-MMM-yyyy  h:mm:ss" }}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.claim_ID}}</td>
+          <td style="width: 150px!important;white-space: break-spaces;">{{offlineClaimItem.status}}</td>
+          <td style="width: 220px!important;white-space: break-spaces;">{{offlineClaimItem.remark}}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="20">No data Available</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_chassis_view'>
+    <div class="header">
+      View Chassis
+    </div>
+    <i class="close icon" (click)='closeChassisView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="chassisViewTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='model_offline_batch_claims_scheme_url_view'>
+    <div class="header">
+      View Scheme
+    </div>
+    <i class="close icon" (click)='closeSchemeView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="schemeViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+</form>

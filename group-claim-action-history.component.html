@@ -1,0 +1,43 @@
+<p-toast position="top-right" key="groupActionHistoryMessage"></p-toast>
+
+<form>
+  <div class="row">
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="groupActionHistoryObj" [loading]="groupActionHistoryLoading" styleClass="p-datatable-striped" [rowHover]="true" id="groupActionHistoryTable">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Group Claim Id</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">From Role</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">From Status</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Action Taken</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">To Role</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">To Status</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Remarks</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Updated By</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Updated On</th>
+            <th style="width: 140px!important;min-width: 140px!important;white-space: break-spaces;">Time Difference</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-groupActionHistoryItem>
+          <tr>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupActionHistoryItem.G_CLAIM_ID }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ groupActionHistoryItem.P_CUST_ROLE_DESC }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.P_STATUS_DESC }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_ACTION_SEL_DESC }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_CUST_ROLE_DESC }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_STATUS_DESC }}</td> 
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_REMARK }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_CREATED_BY }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.C_CREATED_ON_DT }}</td>
+            <td style="width: 140px!important;min-width: 140px;white-space: break-spaces;">{{ groupActionHistoryItem.DIFF_HR_MM }}</td>  
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+           <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,70 @@
+<p-toast position="top-right" key="insurencePolicyDetailsMessage"></p-toast>
+<form [formGroup]="insurencePolicyDetailsForm">
+  <div class='three fields'>
+    <div class="field">
+      <label>Insurence Company</label>
+      <input type="text" placeholder="Insurence Company" id="txt_inc_pol_details_insurence_company"
+        formControlName="INS_COMPANY_NAME" readonly>
+    </div>
+
+    <div class="field">
+      <label>Policy Number</label>
+      <input type="text" placeholder="Policy Number" id="txt_inc_pol_details_policy_number" formControlName="POLICY_NO"
+        readonly>
+    </div>
+
+    <div class="field">
+      <label>Policy Start Date </label>
+      <div class="ui calendar" id="txt_inc_pol_details_policy_start_date">
+        <div class="ui input left icon"> <i class="calendar icon"></i><input name="StartDate" type="text"
+            placeholder="Policy Start Date " id="txt_inc_pol_details_policy_start_date"
+            formControlName="POLICY_STARTDATE" class='datepicker' autocomplete="off" style="opacity: unset!important;"
+            readonly></div>
+      </div>
+    </div>
+  </div>
+
+  <div class='three fields'>
+    <div class="field">
+      <label>Policy End Date</label>
+      <div class="ui calendar" id="txt_inc_pol_details_policy_end_date">
+        <div class="ui input left icon"> <i class="calendar icon"></i><input name="EndDate" type="text"
+            placeholder="Policy End Date" id="txt_inc_pol_details_policy_end_date" formControlName="POLICY_ENDDATE"
+            class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>OD Premium </label>
+      <input type="text" placeholder="OD Premium" id="txt_inc_pol_details_od_premium" formControlName="OD_PREMIUM"
+        readonly>
+    </div>
+
+    <div class="field">
+      <label>TP Premium</label>
+      <input type="text" placeholder="TP Premium" id="txt_inc_pol_details_tp_premium" formControlName="TP_PREMIUM"
+        readonly>
+    </div>
+
+  </div>
+
+  <div class='three fields'>
+    <div class="field">
+      <label>Chassis No </label>
+      <input type="text" placeholder="Chassis No " id="txt_inc_pol_details_chassis_no" formControlName="CHASSIS_NO"
+        readonly>
+    </div>
+
+    <div class="field">
+      <label>Total Premium </label>
+      <input type="text" placeholder="Total Premium" id="txt_inc_pol_details_total_premiun"
+        formControlName="TOTAL_PREMIUM" readonly>
+    </div>
+
+    <div class="field">
+      <label>Policy Status</label>
+      <input type="text" placeholder="Policy Status" id="txt_inc_pol_details_policy_status" formControlName="STATUS"
+        readonly>
+    </div>
+  </div>
+</form>

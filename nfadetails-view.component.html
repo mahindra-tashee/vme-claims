@@ -1,0 +1,347 @@
+<p-toast position="top-right" key="nfaDetailsViewMessage"></p-toast>
+
+<form [formGroup]="nfaDetailsViewForm">
+  <div class='four fields'>
+    <div class="field">
+      <label>NFA No </label>
+      <input type="text" placeholder="NFA No" id="txt_nfa_details_view_nfa_no" formControlName="NFA_NO" readonly>
+    </div>
+
+    <div class="field">
+      <label>Opty Id </label>
+      <input type="text" placeholder="Opty Id" id="txt_nfa_details_view_opty_id" formControlName="OPTY_ID" readonly>
+    </div>
+
+    <div class="field">
+      <label>TML Discount </label>
+      <input type="text" placeholder="TML Discount" id="txt_nfa_details_view_tml_discount" formControlName="TML_DISCOUNT" readonly>
+    </div>
+
+    <div class="field">
+      <label>Used Discount </label>
+      <input type="text" placeholder="Used Discount" id="txt_nfa_details_view_used_discount" formControlName="USED_DISCOUNT" readonly>
+    </div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field">
+      <label>Dealer Margin </label>
+      <input type="text" placeholder="Dealer Margin" id="txt_nfa_details_view_dealer_margin" formControlName="DEALER_MARGIN" readonly>
+    </div>
+
+    <div class="field">
+      <label>Retension </label>
+      <input type="text" placeholder="Retension" id="txt_nfa_details_view_retension" formControlName="RETENSION" readonly>
+    </div>
+
+    <div class="field">
+      <label>Flat Scheme </label>
+      <input type="text" placeholder="Flat Scheme" id="txt_nfa_details_view_flat_scheme" formControlName="FLAT_SCHEME" readonly>
+    </div>
+
+    <div class="field">
+      <label>Approved Amount </label>
+      <input type="text" placeholder="Approved Amount" id="txt_nfa_details_view_approved_amount" formControlName="APPROVED_AMOUNT" readonly>
+    </div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field">
+      <label>Approved Deal Size </label>
+      <input type="text" placeholder="Approved Deal Size" id="txt_nfa_details_view_approved_deal_size" formControlName="APPROVED_DEAL_SIZE" readonly>
+    </div>
+
+    <div class="field">
+      <label>Approved Amount Per Chassis </label>
+      <input type="text" placeholder="Approved Amount Per Chassis" id="txt_nfa_details_view_approved_amt_per_chassis" formControlName="APPROVED_AMOUNT_PER_CHASSIS" readonly>
+    </div>
+
+    <div class="field">
+      <label>Required Deal Size </label>
+      <input type="text" placeholder="Required Deal Size" id="txt_nfa_details_view_required_deal_size" formControlName="REQUIRED_DEAL_SIZE" readonly>
+    </div>
+
+    <div class="field">
+      <label>No of Retails </label>
+      <input type="text" placeholder="No of Retails" id="txt_nfa_details_view_no_of_retails" formControlName="NO_OF_RETAILS" readonly>
+    </div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field">
+      <label>NFA Status </label>
+      <input type="text" placeholder="NFA Status" id="txt_nfa_details_view_nfa_status" formControlName="NFA_STATUS" readonly>
+    </div>
+
+    <div class="field">
+      <label>Credit Amount </label>
+      <input type="text" placeholder="Credit Amount" id="txt_nfa_details_view_credit_amount" formControlName="CREDIT_AMOUNT" readonly>
+    </div>
+
+    <div class="field">
+      <label>NFA Approval Date </label>
+      <div class="ui calendar" id="cal_nfa_details_nfa_approval_date">
+        <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_nfa_details_view_nfa_approval_date" type="text" placeholder="NFA Approval Date" class='datepicker' autocomplete="off" formControlName="NFA_APPROVAL_DATE" style="opacity: unset!important;" readonly></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two fields" style="margin-top: 30px!important;">
+    <label>&nbsp;</label>
+    <button type="button" class="ui light_indigo_btn button" (click)="openNFACalculation()">View NFA Calculation</button>
+    <button type="button" class="ui light_indigo_btn button" (click)="openConcessionDetails()">View Concession Details</button>
+  </div>
+
+  <div class="row" style="margin-top: 30px!important;">
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="nfaDetailsObj" [loading]="nfaDetailsLoading" styleClass="p-datatable-striped" [rowHover]="true" id="nfaDetailsTable">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+            <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Chassis No</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Id</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Invoice No</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-nfaDetailsItem>
+          <tr>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.claimId }}</td>
+            <td style="width: 200px!important;min-width: 200px;white-space: break-spaces;">{{ nfaDetailsItem.chassisNo }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.schemeId }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.schemeName }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.claimAmount }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.status }}</td>
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.custodyRole }}</td> 
+            <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsItem.dealerInvoiceNo }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+           <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="ui large coupled modal" id='modal_nfa_details_view_nfa_calculation'>
+    <div class="header">
+      NFA Calculation
+    </div>
+    <i class="close icon"></i>  
+    <div class="scrolling content">
+      <div class="body">
+        <form class="ui form secondary segment">
+          <p-toast position="top-right" key="nfaDetailsViewNFACalculationMessage"></p-toast>
+
+          <div class="row">
+            <div id="nfaDetailsViewActiveTab" class="ui top attached tabular menu">
+              <a id="nfaDetailsViewNFADetailsTab" class="active item" data-tab="first">NFA Details</a>
+              <a id="nfaDetailsViewSAPFlatDetailsTab" class="item" data-tab="second">SAP Flat Details</a>
+            </div>
+        
+            <div id="nfaDetailsViewNFADetailsTab" class="ui bottom attached tab segment active first" data-tab="first">
+              <div class="row">
+                <div class="sixteen wide field box-shadow-custom">
+                  <p-table [value]="nfaDetailsCalculationVASObj" [loading]="nfaDetailsCalculationLoading" styleClass="p-datatable-striped" [rowHover]="true" id="nfaDetailsCalculationTable">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th style="width: 120px!important;min-width: 120px!important;white-space: break-spaces;">Cash</th>
+                        <th style="width: 120px!important;min-width: 120px!important;white-space: break-spaces;">Insurance</th>
+                        <th style="width: 120px!important;min-width: 120px!important;white-space: break-spaces;">Spare Parts</th>
+                        <th style="width: 120px!important;min-width: 120px!important;white-space: break-spaces;">AMC</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Extended Warranty</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">On Site Service</th>
+                        <th style="width: 120px!important;min-width: 120px!important;white-space: break-spaces;">Fleetman</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-nfaDetailsCalculationVASItem>
+                      <tr>
+                        <td style="width: 120px!important;min-width: 120px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_CASH }}</td>
+                        <td style="width: 120px!important;min-width: 120px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_INSURANCE }}</td>
+                        <td style="width: 120px!important;min-width: 120px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_SPARE_PARTS }}</td>
+                        <td style="width: 120px!important;min-width: 120px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_AMC }}</td>
+                        <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_EXTENDED_WARRANTY }}</td>
+                        <td style="width: 150px!important;min-width: 150px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_ONSITE_SERVICES }}</td> 
+                        <td style="width: 120px!important;min-width: 120px;white-space: break-spaces;">{{ nfaDetailsCalculationVASItem.appr_FLEETMAN }}</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                       <td colspan="7">No Data Available</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+
+              <div class="ui two column grid">
+                <div class="row">
+                  <div class="column">
+                    <div class="field"> <a class="ui ribbon label" style="margin-top:30px;margin-left:2px; "><i class="edit icon"></i> NFA Details </a> </div>
+
+                    <div class="row">
+                      <div class="sixteen wide field box-shadow-custom table-responsive">
+                        <p-table [value]="nfaDetailsCalculationDetailsObj" [loading]="nfaDetailsCalculationDetailsLoading" styleClass="p-datatable-striped" [rowHover]="true" id="nfaDetailsCalculationDetailsTable">
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th style="width: 20vw!important;white-space: break-spaces;">Header</th>
+                              <th style="width: 15vw!important;white-space: break-spaces;">Value</th>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-nfaDetailsCalculationDetailsItem>
+                            <tr>
+                              <td style="width: 20vw!important;white-space: break-spaces;">{{ nfaDetailsCalculationDetailsItem.header }}</td>
+                              <td style="width: 15vw!important;white-space: break-spaces;">{{ nfaDetailsCalculationDetailsItem.value }}</td>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="emptymessage">
+                            <tr>
+                            <td colspan="2">No Data Available</td>
+                            </tr>
+                          </ng-template>
+                        </p-table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column">
+                    <div class="field"> <a class="ui ribbon label" style="margin-top:30px;margin-left:2px; "><i class="edit icon"></i> Calculation </a> </div>
+
+                    <div class="row">
+                      <div class="sixteen wide field box-shadow-custom table-responsive">
+                        <p-table [value]="nfaDetailsCalculationObj" [loading]="nfaDetailsCalculationLoading" styleClass="p-datatable-striped" [rowHover]="true" id="nfaDetailsCalculationTable">
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th style="width: 20vw!important;white-space: break-spaces;">Header</th>
+                              <th style="width: 15vw!important;white-space: break-spaces;">Value</th>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-nfaDetailsCalculationItem>
+                            <tr>
+                              <td style="width: 20vw!important;white-space: break-spaces;">{{ nfaDetailsCalculationItem.header }}</td>
+                              <td style="width: 15vw!important;white-space: break-spaces;">{{ nfaDetailsCalculationItem.value }}</td>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="emptymessage">
+                            <tr>
+                            <td colspan="2">No Data Available</td>
+                            </tr>
+                          </ng-template>
+                        </p-table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+            <div id="nfaDetailsViewSAPFlatDetailsTab" class="ui bottom attached tab segment second" data-tab="second">
+              <div class="row">
+                <div class="sixteen wide field box-shadow-custom table-responsive">
+                  <p-table [value]="sapFlatDetailsCalculationObj" [loading]="sapFlatDetailsCalculationLoading" styleClass="p-datatable-striped" [rowHover]="true" id="sapFlatDetailsCalculationTable">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th style="width: 30vw!important;white-space: break-spaces;">Header</th>
+                        <th style="width: 40vw!important;white-space: break-spaces;">Value</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-sapFlatDetailsCalculationItem>
+                      <tr>
+                        <td style="width: 30vw!important;white-space: break-spaces;">{{ sapFlatDetailsCalculationItem.header }}</td>
+                        <td style="width: 40vw!important;white-space: break-spaces;">{{ sapFlatDetailsCalculationItem.value }}</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                       <td colspan="2">No Data Available</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>    
+  </div>
+
+  <div class="ui large coupled modal" id='modal_nfa_details_view_concession_calculation'>
+    <div class="header">
+      Concession Calculation
+    </div>
+    <i class="close icon"></i>  
+    <div class="scrolling content">
+      <div class="body">
+        <form class="ui form secondary segment">
+          <p-toast position="top-right" key="nfaDetailsViewConcessionDetailsMessage"></p-toast>
+
+          <div class="ui two column grid">
+            <div class="row">
+              <div class="column">
+                <div class="field"> <a class="ui ribbon label" style="margin-top:1px;margin-left:2px; "><i class="edit icon"></i> Concession Details </a> </div>
+
+                <div class="row">
+                  <div class="sixteen wide field box-shadow-custom table-responsive">
+                    <p-table [value]="concessionDetailsObj" [loading]="concessionDetailsLoading" styleClass="p-datatable-striped" [rowHover]="true" id="concessionDetailsTable">
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="width: 20vw!important;white-space: break-spaces;">Header</th>
+                          <th style="width: 15vw!important;white-space: break-spaces;">Value</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-concessionDetailsItem>
+                        <tr>
+                          <td style="width: 20vw!important;white-space: break-spaces;">{{ concessionDetailsItem.header }}</td>
+                          <td style="width: 15vw!important;white-space: break-spaces;">{{ concessionDetailsItem.value }}</td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="2">No Data Available</td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column">
+                <div class="field"> <a class="ui ribbon label" style="margin-left:2px; "><i class="edit icon"></i> Claim Details </a> </div>
+
+                <div class="row">
+                  <div class="sixteen wide field box-shadow-custom table-responsive">
+                    <p-table [value]="claimDetailsObj" [loading]="claimDetailsLoading" styleClass="p-datatable-striped" [rowHover]="true" id="claimDetailsTable">
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="width: 20vw!important;white-space: break-spaces;">Header</th>
+                          <th style="width: 15vw!important;white-space: break-spaces;">Value</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-claimDetailsItem>
+                        <tr>
+                          <td style="width: 20vw!important;white-space: break-spaces;">{{ claimDetailsItem.header }}</td>
+                          <td style="width: 15vw!important;white-space: break-spaces;">{{ claimDetailsItem.value }}</td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="2">No Data Available</td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>    
+  </div>
+</form>

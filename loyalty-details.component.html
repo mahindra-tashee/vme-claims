@@ -1,0 +1,37 @@
+<p-toast position="top-right" key="loyalthyDetailsMessage"></p-toast>
+
+<form [formGroup]="loyalthyDetailsForm">
+  <div class='three fields'>
+    <div class="field">
+      <label>Chassis No </label>
+        <input type="text" placeholder="Chassis No " id="txt_loyalthy_details_chassis_no" formControlName="CHASSIS_NO" readonly>
+    </div>
+  
+    <div class="field">
+      <label>Referral Customer</label>
+        <input type="text" placeholder="Referral Customer" id="txt_loyalthy_details_referral_customer" formControlName="REFERRAL_CUSTOMER" readonly>
+    </div>
+
+    <div class="field">
+      <label>Referral Type</label>
+        <input type="text" placeholder="Referral Type" id="txt_loyalthy_details_referral_type" formControlName="REFERRAL_TYPE" readonly>
+    </div>
+  </div>
+
+  <div class='three fields'>
+    <div class="field">
+        <label>Referral Account</label>
+        <input type="text" placeholder="Referral Account" id="txt_loyalthy_details_referral_account" formControlName="REFERRAL_ACCOUNT"  readonly>
+    </div>
+   
+    <div class="field">
+      <label>Referral Account Status</label>
+        <input type="text" placeholder="Referral Account Status" id="txt_loyalthy_details_referral_account_status" formControlName="REFERRAL_ACCOUNT_STATUS" readonly>
+    </div>
+  
+    <div class="field">
+      <label>Referral Account Type</label>
+      <input type="text" placeholder="Referral Account Type" id="txt_loyalthy_details_referral_account_type" formControlName="REFERRAL_ACCOUNT_TYPE" readonly>
+    </div>
+  </div>
+</form>

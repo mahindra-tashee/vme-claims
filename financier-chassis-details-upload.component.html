@@ -1,0 +1,90 @@
+<p-toast position="top-right" key="financierChassisUploadMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Financier Chassis Details Upload </a> </div>
+
+  <p-confirmDialog [style]="{width: '50vw'}" key="financierChassisUploadDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row">
+    <div class="three fields">
+      <div class="field">
+        <label>&nbsp;</label>
+        <input class="ui input focus" id="file_bulk_claim" type="file" (change)="choosefinancierChassisFile($event)">
+      </div>
+
+      <div class="field">
+        <label>&nbsp;</label>
+        <button type="button" class="ui light_indigo_btn button" (click)="uploadFinancierChassisFile()" [disabled]="!isFinancierChassisFile"><i class="upload icon"></i>Load Details</button>
+        <button type="button" class="ui button green_btn" (click)='downloadFinancierChassisUploadTemplate()'><i class="download icon"></i>Download Template</button>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class="sixteen wide field box-shadow-custom table-responsive">
+      <p-table class="box-shadow-custom" [value]="financierChassisDetailsObj" [loading]="financierChassisDetailsLoading"  [(selection)]="selectedItems" dataKey="" styleClass="p-datatable-striped" [rowHover]="true" id="financierChassisDetailsTable">
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex">
+            <button type="button" pButton pRipple icon="pi pi-times"   (click)="deleteRow()" class="p-button-danger p-mr-2 sticky-column-btn-one" pTooltip="Clear Claim Data" tooltipPosition="bottom" [disabled]="!isFinancierChassisDetailsObj"></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="financierChassisDetailsLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isFinancierChassisDetailsObj"></p-tableHeaderCheckbox></th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Loan Sanction Amount</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">LTV</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Loan Tenure</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">IIR</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">EMI</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Financier Name</th>
+            <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;">Delivery Order Date</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Delivery Order No</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Order No</th>
+            <th style="width: 190px!important;min-width: 190px!important;white-space: break-spaces;">Chassis No</th>
+            <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">User Id</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-financierChassisItem let-i="rowIndex">
+          <tr>
+            <td style="width: 3rem" [ngClass]="financierChassisDetailsLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="financierChassisItem"></p-tableCheckbox></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_loan_sanction_amt" [(ngModel)]="financierChassisItem.loan_SANCTION_AMT" [ngModelOptions]="{standalone: true}" (keyup)="isValidNumber($event, i, 1)" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_ltv" [(ngModel)]="financierChassisItem.ltv" [ngModelOptions]="{standalone: true}"(keyup)="isValidNumber($event, i, 1)" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_loan_tenure"[(ngModel)]="financierChassisItem.loan_TENURE" [ngModelOptions]="{standalone: true}" (keyup)="isValidNumber($event, i, 1)" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_iir" [(ngModel)]="financierChassisItem.iir" [ngModelOptions]="{standalone: true}" (keyup)="isValidNumber($event, i, 1)" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_emi" [(ngModel)]="financierChassisItem.emi" [ngModelOptions]="{standalone: true}" (keyup)="isValidNumber($event, i, 1)" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input type="text" id="txt_financier_financier_name" [(ngModel)]="financierChassisItem.financier_NAME" [ngModelOptions]="{standalone: true}" required></td>
+            <td style="width: 250px!important;min-width: 250px!important;">
+              <div class="ui calendar" id="cal_financier_delivery_order_date_{{ i }}">
+                <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_financier_delivery_order_date_{{ i }}" type="text" placeholder="Delivery Order Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+              </div>
+            </td> 
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="text" id="txt_financier_delivery_order_no" [(ngModel)]="financierChassisItem.delivery_ORDER_NO" [ngModelOptions]="{standalone: true}" required></td>
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;"><input pInputText type="number" id="txt_financier_order_no" [(ngModel)]="financierChassisItem.order_NO" [ngModelOptions]="{standalone: true}" required></td>
+            <td style="width: 190px!important;min-width: 190px!important;white-space: break-spaces;"><input pInputText type="text" id="txt_financier_chassis_no" [(ngModel)]="financierChassisItem.chassis_NO"[ngModelOptions]="{standalone: true}" required></td> 
+            <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ financierChassisItem.user_ID }}</td>                        
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+    
+    <div class="field" style="text-align: right;">
+      <label>&nbsp;</label>
+      <div class="ui buttons">
+        <button type="button" class="ui light_indigo_btn button" (click)="postValidateAndUpload()"> <i class="upload icon"></i>Validate and Upload</button>
+      </div>
+    </div>
+  </div>
+</form>
