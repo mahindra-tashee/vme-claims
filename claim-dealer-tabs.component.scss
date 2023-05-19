@@ -1,0 +1,93 @@
+.ui.fullscreen.modal{
+  left: unset!important;
+}
+.ui.modal > .close{
+  top: 5px!important; 
+  right: 5px!important; 
+  color: var(--black)!important;
+}
+.ui.modal>.header:not(.ui){
+  text-align: center;
+}
+.ui.modal .header .icons {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: -55px;
+  background-color: white;
+  margin: 0px auto;
+  width: 155px;
+  height: 155px;
+  line-height: 89px;
+  border-radius: 50%;
+  z-index: -1;
+  text-align: center;
+  color: #777874;
+  font-size: 45px;
+}
+.ui.modal .icon-circle {
+  width: 45px;
+  height: 45px;
+  margin: 0px auto;
+  background-color: #777874;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 43px;
+  margin-top: 10px;
+  color: white;
+}
+.ui.modal .header i.icon {
+  margin: 0px auto !important;
+}
+.ui.fullscreen.modal {
+  top: 50px !important;
+}
+.ui.modal.disabled{
+  pointer-events:none!important;
+}
+.ui.modal .header .icons{
+  display:none!important
+}
+.ui.modal>.header:not(.ui){
+  padding: 8px!important;
+  text-align: center;
+  padding: 8px!important;
+  color: var(--dark-indigo)!important;
+  background-color: var(--white)!important;
+  font-family: 'OpenSans-SemiBold', 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
+  font-size: 18px!important;
+  font-weight: bold!important;
+}
+.ui.dimmer.modals.page.transition.visible.active{
+  max-height: 100vh!important;
+  overflow: auto!important;
+}
+.ui.form .fields>.field.centered{
+  margin: 0px auto;
+}
+.mb-0{
+  margin-bottom: 0px!important;
+}
+.app-form, .action-form{
+  margin-top: 10px;
+  position: relative;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  padding: 20px;
+  background-color: #f3f4f5;
+  border-radius: 8px;
+}
+#first, #second, #third, #fourth, #fifth, #sixth,#seventh, #eighth, #ninth, #tenth, #eleventh{
+  min-width: 172px!important;
+}
+body.scrollbar {
+  padding: 0px!important;
+}
+.display-none{
+  display: none!important;
+}
+.display-unset{
+  display: unset!important;
+}

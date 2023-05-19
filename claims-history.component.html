@@ -1,0 +1,87 @@
+<p-toast position="top-right" key="claimsHistoryMessage"></p-toast>
+
+<form>
+  <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+    <div class='four wide field popup-page-information' [hidden]="!isClaimsHistoryObj">
+      <label>Show   </label><span></span>
+      <select (change)="sizeChanged($event)" id="dd_claims_history_size" class="ui dropdown">
+        <option value=10>10</option>
+        <option value=25>25</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+      </select>
+      <label>Entries </label>
+    </div>
+    <div class='twelve wide field pagination' *ngIf="isClaimsHistoryObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div> 
+    <div class="sixteen wide field">
+      <p-table class="box-shadow-custom" [value]="claimsHistoryObj" [loading]="claimsHistoryLoading" [rowHover]="true" id="claimsHistoryTable" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 120px!important;white-space: break-spaces;" [ngClass]="claimsHistoryLoading == true ? '' : 'sticky-column'">Claims Id</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Chassis No</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Claims Amount</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Custody Role</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Status</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Created By</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Created on</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-claimsHistoryItem>
+          <tr>
+            <td style="width: 120px!important;white-space: break-spaces;" [ngClass]="claimsHistoryLoading == true ? '' : 'sticky-column'" class="toggle-button" (click)="openIndividualClaimView(claimsHistoryItem.chassis_NO, claimsHistoryItem.scheme_ID, claimsHistoryItem.claim_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ claimsHistoryItem.claim_ID }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.chassis_NO }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;" class="toggle-button" pTooltip="View Scheme" tooltipPosition="bottom" (click)="openSchemeView(claimsHistoryItem.scheme_ID)">{{ claimsHistoryItem.scheme_ID }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.claim_AMOUNT }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.cust_ROLE }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.st_DESC }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.created_BY }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ claimsHistoryItem.created_ON }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class='sixteen wide field pagination' style="margin-top: 10px; margin-bottom: 20px;" *ngIf="isClaimsHistoryObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+  </div>
+</form>

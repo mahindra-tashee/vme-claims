@@ -1,0 +1,57 @@
+<p-toast position="top-right" key="availConcessionMessage"></p-toast>
+
+<form>
+  <div class="content">
+    <div class="row">
+      <div class="four fields" [formGroup]="availConcessionForm">
+        <div class="field">
+          <label>Dealer Invoice Number</label>
+          <input placeholder="Dealer Invoice Number" type="text" formControlName="DEALER_INVOICE_NO" type="text" id="txt_avail_concession_dealer_invoice_number" readonly>
+        </div>
+      
+        <div class="field">
+          <label>Concession CRM</label>
+          <input placeholder="Concession CRM" type="text" formControlName="CONCESSION_CRM" id="txt_avail_concession_concession_crm" readonly>
+        </div>
+      
+        <div class="field">
+          <label>CRM Credit Note</label>
+          <input placeholder="CRM Credit Note" type="text" formControlName="CREDIT_NOTE" id="txt_avail_concession_crm_credit_note" readonly>
+        </div>
+        
+        <div class="field">
+          <label>Remaining Concession + Credit Note</label>
+          <input placeholder="Remaining Concession + Credit Note" type="text" formControlName="REMAINING_CONCESSION_CREDIT_NOTE" id="txt_avail_concession_remaining_concession_credit_note" readonly>
+        </div>  
+      </div>
+    </div>
+    
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="availConcessionObj" [loading]="availConcessionLoading" [rowHover]="true" id="availConcessionTable" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 210px!important;white-space: break-spaces;">Claim Id</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Scheme Type</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Claims Amount</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Remaining Concession + Credit Note</th>
+            <th style="width: 210px!important;white-space: break-spaces;">Used Concession + Credit Note </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-availConcessionItem>
+          <tr>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ availConcessionItem.claim_ID }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ availConcessionItem.scheme_TYPE }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ availConcessionItem.claim_Amount_Org }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ availConcessionItem.remaining_Concession_Credit }}</td>
+            <td style="width: 210px!important;white-space: break-spaces;">{{ availConcessionItem.used_Concession_Credit }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

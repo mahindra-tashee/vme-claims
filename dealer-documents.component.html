@@ -1,0 +1,99 @@
+<p-toast position="top-right" key="documentMessage"></p-toast>
+
+<form>
+  <p-confirmDialog [style]="{width: '50vw'}" key="documentDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class="row" [formGroup]="documentForm">
+    <div class="two fields">
+      <div class="field">
+        <label>Document Type</label>
+        <select class='ui selection dropdown' id="dd_document_document_type" formControlName="DOCUMENT">
+          <option value="">Document Type</option>
+          <option *ngFor="let documentTypeItem of documentTypeList" value="{{ documentTypeItem.seq_ID }}">{{ documentTypeItem.document_TYPE }}</option>
+        </select>
+        <div class="error-message" *ngIf="documentForm.controls.DOCUMENT.errors?.required && documentForm.controls.DOCUMENT.touched">Document Type Required</div>
+      </div>
+
+      <div class="field">
+        <label>Document Upload</label>
+        <input class="ui input focus" id="file_document" type="file" (change)="chooseDocumentFile($event)">
+      </div>
+
+      <div class="field">
+        <label>&nbsp;</label>
+        <button type="button" class="ui button light_indigo_btn" (click)="uploadDocumentFile()" [disabled]="!isDocumentFile">
+          <i class="upload icon"></i>Upload Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class="row">
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="documentObj" [loading]="documentLoading" styleClass="p-datatable-striped" [rowHover]="true" id="documentUploadTable">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px!important;white-space: break-spaces;">Document Id</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Claim Id</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Document Type</th>
+            <th style="width: 250px!important;white-space: break-spaces;">Document Name</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Auto Verified</th>
+            <th style="width: 230px!important;white-space: break-spaces;" class='text-center'>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-documentItem>
+          <tr>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.doc_ID }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.claim_ID }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ documentItem.document_TYPE }}</td>
+            <td style="width: 250px!important;white-space: break-spaces;">
+              <a (click)="downloadDocument(documentItem)" style="cursor: pointer;" class="toggle-button">{{ documentItem.document_NAME }}</a>
+            </td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.is_AUTO_VERIFIED }}</td>
+            <td style="width: 230px!important;white-space: break-spaces;" class='text-center'>
+              <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadDocument(documentItem)"></button>
+              <button type="button" pButton pRipple icon="pi pi-trash" pTooltip="Delete File" tooltipPosition="bottom" class="p-button-danger p-mr-2" style="margin-left: 20px;" (click)="deleteDocument(documentItem)"></button>
+            </td>  
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+           <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class='four fields' [formGroup]="submitForm">
+    <div class="field">
+      <label>Action <span class="required">*</span></label>
+      <select class='ui dropdown selection' id="dd_document_action" formControlName="ACTION">
+        <option value="">Action</option>
+        <option *ngFor="let actionitem of actionList" value="{{ actionitem.action }}">{{ actionitem.act_DESC }}</option>
+      </select>
+      <div class="error-message" *ngIf="submitForm.controls.ACTION.errors?.required && submitForm.controls.ACTION.touched">Action Required</div>
+    </div>
+
+    <div class="field">
+      <label>Remark <span class="required">*</span></label>
+      <input type="text" placeholder="Remark" id="dd_document_remarks" formControlName="REMARK" autocomplete="off">
+      <div class="error-message" *ngIf="submitForm.controls.REMARK.errors?.required && submitForm.controls.REMARK.touched">Remark Required</div>
+    </div>
+
+    <div class="field">
+      &nbsp;
+    </div>
+
+    <div class="field" style="text-align: right;">
+      <label>&nbsp;</label>
+      <div class="ui buttons">
+        <button class="ui button green_btn" style="margin-right: 10px;" (click)="updateCustody()"> <i class="check icon"> </i> &nbsp; Save </button>
+      </div>
+    </div>
+  </div>
+</form>

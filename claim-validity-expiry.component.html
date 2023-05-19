@@ -1,0 +1,494 @@
+<p-toast position="top-right" key="claimValidityExpiryMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Claims Validity Expiry </a> </div>
+
+  <p-confirmDialog [style]="{width: '50vw'}" key="claimValidityExpiryDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+  <div class='row'>
+    <div class="ui accordion column field">
+      <div class="active title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="active content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" hidden>
+            <label>Business Unit</label>
+            <select class='ui selection dropdown' id="dd_claim_validity_expiry_business_unit">
+              <option selected disabled value="">Business Unit</option>
+              <option *ngFor="let businessUnitItem of businessUnitList" value="{{ businessUnitItem.text }}">{{ businessUnitItem.value }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Scheme Type</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_scheme_type">
+              <option value="" disabled selected hidden>Scheme Type</option>
+              <option *ngFor="let schemeTypeItem of schemeTypeList" value="{{ schemeTypeItem.stm_ID }}">{{ schemeTypeItem.scheme_TYPE }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Scheme</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_scheme">
+              <option value="" disabled selected hidden>Scheme</option>
+              <option *ngFor="let schemeItem of schemeList" value="{{ schemeItem.schemeId }}">{{ schemeItem.schemeName }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Claim Type</label>
+            <select class='ui selection dropdown' id="dd_claim_validity_expiry_claim_type_hardcoded">
+              <option selected disabled value="">Claim Type</option>
+              <option *ngFor="let claimTypeHardCodeItem of claimTypeHardCodeList" value="{{ claimTypeHardCodeItem.value }}">{{ claimTypeHardCodeItem.description }}</option>
+            </select>
+          </div>
+
+          <div class="field" *ngIf="isIndividualClaim">
+            <label>Claim Id</label>
+            <input type="text" placeholder="Enter Claim Id (Comma Seperated)" id="txt_claim_validity_expiry_claim_id" autocomplete="off">
+          </div>
+
+          <div class="field" *ngIf="!isIndividualClaim">
+            <label>Group Claim Id</label>
+            <input type="text" placeholder="Enter Group Claim Id (Comma Seperated)" id="txt_claim_validity_expiry_group_claim_id" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Chassis No</label>
+            <input type="text" placeholder="Enter Chassis No (Comma Seperated)" id="txt_claim_validity_expiry_chassis_no" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" [hidden]="isTMCV">
+            <label>Zone</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_zone">
+              <option value="" disabled selected hidden>Zone</option>
+              <option *ngFor="let zoneItem of zoneList" value="{{ zoneItem.ZONE }}">{{ zoneItem.ZONE }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Region</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_region">
+              <option value="" disabled selected hidden>Region</option>
+              <ng-container *ngIf="isTMCV">
+                <option *ngFor="let regionItem of regionList" value="{{ regionItem.REGION }}">{{ regionItem.REGION }}</option>
+              </ng-container>
+              <ng-container *ngIf="!isTMCV">
+                <option *ngFor="let regionItem of regionList" value="{{ regionItem.AREA }}">{{ regionItem.AREA }}</option>
+              </ng-container>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="!isTMCV">
+            <label>Area</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_area">
+              <option value="" disabled selected hidden>Area</option>
+              <option *ngFor="let areaItem of areaList" value="{{ areaItem.AREA }}">{{ areaItem.AREA }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>State</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_state">
+              <option value="" disabled selected hidden>State</option>
+              <option *ngFor="let stateItem of stateList" value="{{ stateItem.STATE }}">{{ stateItem.STATE }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Dealer</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_dealer">
+              <option value="" disabled selected hidden>Dealer</option>
+              <option *ngFor="let dealerItem of dealerList" value="{{ dealerItem.DLRCODE }}">{{ dealerItem.DEALERNAME }} + {{ dealerItem.DLRCODE }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>LOB</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_lob">
+              <option value="" disabled selected hidden>LOB</option>
+              <option *ngFor="let lobItem of lobList" value="{{ lobItem.fincode }}">{{ lobItem.vclob }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>PPL</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_ppl">
+              <option value="" disabled selected hidden>PPL</option>
+              <option *ngFor="let pplItem of pplList" value="{{ pplItem.fincode }}">{{ pplItem.vcppl }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>PL</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_pl">
+              <option value="" disabled selected hidden>PL</option>
+              <option *ngFor="let plItem of plList" value="{{ plItem.fincode }}">{{ plItem.vcpl }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>VC</label>
+            <select class="ui dropdown selection search multiple" id="dd_claim_validity_expiry_vc">
+              <option value="" disabled selected hidden>VC</option>
+              <option *ngFor="let vcItem of vcList" value="{{ vcItem.fincode }}">{{ vcItem.desctext }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>Date Type</label>
+            <select class='ui selection dropdown' id="dd_claim_validity_expiry_date_type">
+              <option selected disabled value="">Date Type</option>
+              <option value="NA">NA</option>
+              <option value="CREATED">Created On</option>
+              <option value="EXPIRY">Expiry On</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Start Date </label>
+            <div class="ui calendar" id="cal_claim_validity_expiry_start_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_validity_expiry_start_date" type="text" placeholder="Start Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+      
+          <div class="field">
+            <label>End Date </label>
+            <div class="ui calendar" id="cal_claim_validity_expiry_end_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="EndDate" id="txt_claim_validity_expiry_end_date" type="text" placeholder="End Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+          
+          <div class="field">&nbsp;</div>
+
+          <div class='field'>
+            <div class="field pull-right">
+              <label>&nbsp;</label>
+              <div class="ui buttons">
+                <button class="ui button green_btn" id="btn_claim_validity_expiry_search" (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id="btn_claim_validity_expiry_reset" (click)="clearFilter()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 20px!important;">
+    <div id="claimValidityExpiryActiveTab" class="ui top attached tabular menu">
+      <a id="claimValidityExpiryIndividualClaimTab" class="active item" data-tab="first">Individual Claim</a>
+      <a id="claimValidityExpiryGroupClaimTab" class="item" data-tab="second">Group Claim</a>
+    </div>
+
+    <div id="claimValidityExpiryIndividualClaimTableTab" class="ui bottom attached tab segment active first" data-tab="first">
+      <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class='four wide field page-information' [hidden]="!isIndividualClaimObj">
+          <label>Show   </label><span></span>
+          <select (change)="individualClaimSizeChanged($event)" id="dd_claim_validity_expiry_individual_size" class="ui dropdown">
+            <option value=10>10</option>
+            <option value=25>25</option>
+            <option value=50>50</option>
+            <option value=100>100</option>
+          </select>
+          <label>Entries   </label>
+        </div>
+        <div class='twelve wide field pagination' *ngIf="isIndividualClaimObj">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+        <div class="sixteen wide field">
+          <div class="table-responsive box-shadow-custom">
+            <p-table [value]="individualClaimObj" [loading]="individualClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedIndividualClaims" [rowHover]="true" id="claimValidityExpiryIndividualClaimTable">
+              <ng-template pTemplate="header" style="width: 100%!important; min-width: 100%!important;">
+                <tr>
+                  <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isIndividualClaimObj" (click)="getSelectedIndividualClaimId()"></p-tableHeaderCheckbox></th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'">Claim Id</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Amount</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">GDC Approved Amount</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Type</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                  <th style="width: 100px!important;min-width: 250px!important;white-space: break-spaces;">Dealer Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Blocking Status</th>
+                  <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Remarks</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created By</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Created On</th>
+                  <th style="width: 300px!important;min-width: 300px!important;white-space: break-spaces;" class="text-center">Expiry Date</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-individualClaimItem let-i="rowIndex">
+                <tr>
+                  <td style="width: 3rem" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="individualClaimItem" (click)="getSelectedIndividualClaimId()"></p-tableCheckbox></td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'" (click)="openIndividualClaimView(individualClaimItem.chassis_NO, individualClaimItem.scheme_ID, individualClaimItem.claim_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ individualClaimItem.claim_ID }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(individualClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ individualClaimItem.chassis_NO }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button break" (click)="openSchemeView(individualClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ individualClaimItem.scheme_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(individualClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ individualClaimItem.scheme_ID }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.claim_AMOUNT }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.claim_AMT_GDC }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.claim_TYPE }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.dealercode }}</td>
+                  <td style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;" class="break">{{ individualClaimItem.dlr_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="break">{{ individualClaimItem.role_DESCRIPTION }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="break">{{ individualClaimItem.st_DESC }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.block_FLAG }}</td>
+                  <td style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class="break">{{ individualClaimItem.remarks }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.created_BY }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.created_ON | date:"dd-MMM-yyyy" }}</td>
+                  <td style="width: 300px!important;min-width: 300px!important;white-space: break-spaces;">
+                    <div class="ui calendar" id="cal_claim_validity_expiry_individual_date_{{ i }}">
+                      <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_validity_expiry_individual_date_{{ i }}" type="text" placeholder="Expiry Date" class='datepicker' autocomplete="off" [(ngModel)]="individualClaimItem.expiry_DATE" [ngModelOptions]="{standalone: true}" style="opacity: unset!important;"></div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isIndividualClaimObj">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+                First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+                Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+                {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+                Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+                Last
+            </a>
+          </div>
+        </div>
+
+        <div class='sixteen wide field pagination'>
+          <div class="ui divider" *ngIf="isIndividualClaimObj"></div>
+
+          <div class='four fields'>
+            <div class="field">&nbsp;</div>
+            <div class="field">&nbsp;</div>
+            <div class="field">&nbsp;</div>
+
+            <div class="field" style="text-align: right;" *ngIf="isIndividualClaimObj">
+              <div class="ui buttons">
+                <button class="ui button green_btn" style="margin-right: 10px;"(click)="updateIndividualClaim()"> <i class="check icon"> </i> &nbsp;Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="claimValidityExpiryGroupClaimTableTab" class="ui bottom attached tab segment second" data-tab="second">
+      <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class='four wide field page-information' [hidden]="!isGroupClaimObj">
+          <label>Show   </label><span></span>
+          <select (change)="groupClaimSizeChanged($event)" id="dd_claim_validity_expiry_group_size" class="ui dropdown">
+            <option value=10>10</option>
+            <option value=25>25</option>
+            <option value=50>50</option>
+            <option value=100>100</option>
+          </select>
+          <label>Entries   </label>
+        </div>
+        <div class='twelve wide field pagination' *ngIf="isGroupClaimObj">
+          <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+        <div class="sixteen wide field">
+          <div class="table-responsive box-shadow-custom">
+            <p-table [value]="groupClaimObj" [loading]="groupClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedGroupClaims" [rowHover]="true" id="claimValidityExpiryGroupClaimTable">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isGroupClaimObj" (click)="getSelectedGroupClaimId()"></p-tableHeaderCheckbox></th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'">Group Claim Id</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Region</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">LOB</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">PPL</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Id</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Amount</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">GDC Approved Amount</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                  <th style="width: 100px!important;min-width: 250px!important;white-space: break-spaces;">Dealer Name</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Custody Role</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Status</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Remarks</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created By</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Created On</th>
+                  <th style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;" class="text-center">Expiry Date</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-groupClaimItem let-i="rowIndex">
+                <tr>
+                  <td style="width: 3rem" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimItem" (click)="getSelectedGroupClaimId()"></p-tableCheckbox></td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'" (click)="openGroupClaimView(groupClaimItem.ppl, groupClaimItem.scheme_ID, groupClaimItem.g_CLAIM_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ groupClaimItem.g_CLAIM_ID }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.region }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.lob }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.ppl }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button break" (click)="openSchemeView(groupClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ groupClaimItem.scheme_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(groupClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ groupClaimItem.scheme_ID }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.claim_AMT }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.gdc_APP_AMT }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.dealercode }}</td>
+                  <td style="width: 250px!important;min-width: 250px!important;white-space: break-spaces;" class="break">{{ groupClaimItem.dlr_NAME }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.role_DESCRIPTION }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.st_DESC }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.remarks }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.created_BY }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.created_ON | date:"dd-MMM-yyyy" }}</td>
+                  <td style="width: 300px!important;min-width: 300px!important;white-space: break-spaces;">
+                    <div class="ui calendar" id="cal_claim_validity_expiry_group_date_{{ i }}">
+                      <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_validity_expiry_group_date_{{ i }}" type="text" placeholder="Expiry Date" class='datepicker' autocomplete="off" [(ngModel)]="groupClaimItem.expiry_DATE" [ngModelOptions]="{standalone: true}" style="opacity: unset!important;"></div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isGroupClaimObj">
+          <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+
+        <div class='sixteen wide field pagination'>
+          <div class="ui divider" *ngIf="isGroupClaimObj"></div>
+
+          <div class='four fields'>
+            <div class="field">&nbsp;</div>
+            <div class="field">&nbsp;</div>
+            <div class="field">&nbsp;</div>
+
+            <div class="field" style="text-align: right;" *ngIf="isGroupClaimObj">
+              <div class="ui buttons">
+                <button class="ui button green_btn" style="margin-right: 10px;"(click)="updateGroupClaim()"> <i class="check icon"> </i> &nbsp;Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='model_claim_validity_expiry_individual_claim_url_view'>
+    <div class="header">
+      View Individual Claim
+    </div>
+    <i class="close icon" (click)='closeIndividualClaimView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.individualClaimViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='modal_claim_validity_expiry_group_claim_url_view'>
+    <div class="header">
+      View Group Claim
+    </div>
+    <i class="close icon" (click)='closeGroupClaimView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.groupClaimViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='modal_claim_validity_expiry_chassis_url_view'>
+    <div class="header">
+      View Chassis
+    </div>
+    <i class="close icon" (click)='closeChassisView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.chassisViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='model_claim_validity_expiry_scheme_url_view'>
+    <div class="header">
+      View Scheme
+    </div>
+    <i class="close icon" (click)='closeSchemeView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.schemeViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+</form>

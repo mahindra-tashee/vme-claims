@@ -1,0 +1,411 @@
+<p-toast position="top-right" key="claimDetailsViewMessage"></p-toast>
+
+<form [formGroup]="claimDetailsViewForm">
+  <div class='four fields'>
+    <div class="field">
+      <label>Claim Id </label>
+      <input type="text" placeholder="Claim Id" id="txt_claim_details_view_claim_id" formControlName="CLAIM_ID" readonly>
+    </div>
+
+    <div class="field">
+      <label>Claim Limit <span class="required">*</span></label>
+      <input type="text" placeholder="Claim Limit" id="txt_claim_details_view_claim_limit" formControlName="CLAIM_LIMIT" readonly>
+    </div>
+
+    <div class="field">
+      <label>Claim Amount <span class="required">*</span></label>
+      <input type="text" placeholder="Claim Amount" id="txt_claim_details_View_claim_amount" formControlName="CLAIM_AMOUNT" readonly>
+    </div>
+
+    <div class="field">
+      <label>Final Claim Amount</label>
+      <input type="text" placeholder="Final Claim Amount" id="txt_claim_details_view_final_claim_amount" formControlName="FINAL_CLAIM_AMOUNT" readonly>
+    </div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field">
+      <label>TMLBSL Approved Amount <span class="required">*</span></label>
+      <input type="text" placeholder="Claim Amount" id="txt_claim_details_view_gdc_approved_amount" formControlName="GDC_APPROVED_AMOUNT" readonly>
+    </div>
+
+    <div class="field">&nbsp;</div>
+
+    <div class="field">&nbsp;</div>
+
+    <div class="field">&nbsp;</div>
+  </div>
+
+  <div class='four fields'>
+    <div class="field">
+      <label>Scheme Name <span class="required">*</span></label>
+      <input type="text" placeholder="Scheme Name" id="txt_claim_details_view_scheme_name" formControlName="SCHEME_NAME" readonly>
+    </div>
+
+    <div class="field">
+      <label>Available Discount</label>
+      <div class="ui icon input">
+        <input type="text" placeholder="Available Discount" id="txt_claim_details_view_available_discount" formControlName="AVAILABLE_DISCOUNT" readonly><i class="eye icon link" (click)="openAvailableDiscount()"></i>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Actual Discount - SAP </label>
+      <input type="text" placeholder="Actual Discount - SAP" id="txt_claim_details_view_actual_discount_sap" formControlName="ACTUAL_DISCOUNT_SAP" readonly>
+    </div>
+
+    <div class="field">
+      <label>Used Discount</label>
+      <input type="text" placeholder="Use Discount" id="txt_claim_details_view_use_discount" formControlName="USE_DISCOUNT" readonly>
+    </div>
+  </div>
+
+  <div class="four fields">
+    <div class="field">
+      <label>IRN </label>
+      <input type="text" placeholder="IRN" id="txt_claim_details_view_irn" formControlName="IRN" readonly>
+    </div>
+
+    <div class="field">
+      <label>Acknowledgement No </label>
+      <input type="text" placeholder="Acknowledgement No" id="txt_claim_details_view_acknowledgement_no" formControlName="ACKNOWLEDGEMENT_NO" readonly>
+    </div>
+
+    <div class="field">
+      <label>Acknowledgement Date </label>
+      <div class="ui calendar" id="cal_claim_details_view_acknowledgement_date">
+        <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_acknowledgement_date" type="text" placeholder="Acknowledgement Date" class='datepicker' autocomplete="off" formControlName="ACKNOWLEDGEMENT_DATE" style="opacity: unset!important;" readonly></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>GST Invoice No </label>
+      <input type="text" placeholder="GST Invoice No" id="txt_claim_details_view_gst_invoice_no" formControlName="GST_INVOICE_NO" readonly>
+    </div>
+  </div>
+
+  <div class="four fields">
+    <div class="field">
+      <label>GST Invoice Date </label>
+      <div class="ui calendar" id="cal_claim_details_view_gst_invoice_date">
+        <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_gst_invoice_date" type="text" placeholder="GST Invoice Date" class='datepicker' autocomplete="off" formControlName="GST_INVOICE_DATE" style="opacity: unset!important;" readonly></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="four fields" *ngIf="!isFISettlement">
+    <div class="field">
+      <label>Avail Concession </label>
+      <div class="ui icon input">
+        <input type="text" placeholder="Avail Concession" id="txt_claim_details_view_avail_concession" formControlName="AVAIL_CONCESSION" readonly><i class="eye icon link" (click)="openAvailConcession()"></i>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Actual Concession - CRM </label>
+      <div class="ui icon input">
+        <input type="text" placeholder="Actual Concession - CRM" id="txt_claim_details_view_actual_concession_crm" formControlName="ACTUAL_CONCESSION_CRM" readonly><i class="eye icon link" (click)="openActualConcessionCRM()"></i>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Used Concession </label>
+      <input type="text" placeholder="Used Concession" id="txt_claim_details_view_used_concession" formControlName="USED_CONCESSION" readonly>
+    </div>
+
+    <div class="field">
+      <label>Actual Available Concession </label>
+      <input type="text" placeholder="Actual Available Concession" id="txt_claim_details_view_actual_available_concession" formControlName="ACTUAL_AVAILABLE_CONCESSION" readonly>
+    </div>
+  </div>
+
+  <div class="four fields" *ngIf="!isFISettlement">
+    <div class="field">
+      <label>Manual Credit Amount </label>
+      <input type="text" placeholder="Manual Credit Amount" id="txt_claim_details_view_manual_credit_amount" formControlName="MANUAL_CREDIT_AMOUNT" readonly>
+    </div>
+
+    <div class="field">
+      <label>CRM Credit Amount </label>
+      <div class="ui icon input">
+        <input type="text" placeholder="CRM Credit Amount" id="txt_claim_details_view_crm_credit_amount" formControlName="CRM_CREDIT_AMOUNT" readonly><i class="eye icon link" (click)="openCRMCreditAmount()"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class="ui accordion column field">
+      <div class="active title icon" (click)="toggleDealerDetails()"><i [ngClass]="isToggleDealerDetails == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Dealer Details </div>
+      <div class="active content">
+        <div class='four fields'>
+          <div class="field">
+            <label>Dealer Business Unit </label>
+            <input type="text" placeholder="Dealer Business Unit" id="txt_claim_details_view_dealer_business_unit" formControlName="DEALER_BUSINESS_UNIT" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Region</label>
+            <input type="text" placeholder="Region" id="txt_claim_details_view_region" formControlName="REGION" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Area</label>
+            <input type="text" placeholder="Area" id="txt_claim_details_view_area" formControlName="AREA" readonly>
+          </div>
+
+          <div class="field">
+            <label>Location </label>
+            <input type="text" placeholder="Location" id="txt_claim_details_view_location" formControlName="LOCATION" readonly>
+          </div>
+        </div>
+
+        <div class='four fields'>
+          <div class="field">
+            <label>Customer Name </label>
+            <input type="text" placeholder="Customer Name" id="txt_claim_details_view_customer_name" formControlName="CUSTOMER_NAME" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Dealer Code </label>
+            <input type="text" placeholder="Dealer Code" id="txt_claim_details_view_dealer_code" formControlName="DEALER_CODE" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Dealer Name </label>
+            <input type="text" placeholder="Dealer Name" id="txt_claim_details_view_dealer_name" formControlName="DEALER_NAME" readonly>
+          </div>
+
+          <div class="field">
+            <label>Dealer Share</label>
+            <input type="text" placeholder="Dealer Share" id="txt_claim_details_view_dealer_discount" formControlName="DEALER_SHARE" readonly>
+          </div>
+        </div>
+
+        <div class='four fields' *ngIf="isStockTransfer">
+          <div class="field">
+            <label>Offtake Dealer Code </label>
+            <input type="text" placeholder="Offtake Dealer Code" id="txt_claim_details_view_offtake_dealer_code" formControlName="OFFTAKE_DEALER_CODE" readonly>
+          </div>
+
+          <div class="field">
+            <label>Offtake Dealer Name </label>
+            <input type="text" placeholder="Offtake Dealer Name" id="txt_claim_details_view_offtake_dealer_name" formControlName="OFFTAKE_DEALER_NAME" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Offtake Dealer GSTIN </label>
+            <input type="text" placeholder="Offtake Dealer GSTIN" id="txt_claim_details_view_offtake_dealer_gstin" formControlName="OFFTAKE_DEALER_GSTIN" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Retail Dealer GSTIN </label>
+            <input type="text" placeholder="Retail Dealer GSTIN" id="txt_claim_details_view_retail_dealer_gstin" formControlName="RETAIL_DEALER_GSTIN" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row' style="margin-bottom: 10px;">
+    <div class="ui accordion column field">
+      <div class="active title icon" (click)="toggleChassisDetails()"><i [ngClass]="isToggleChassisDetails == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Chassis Details </div>
+      <div class="active content">
+        <div class="four fields">
+          <div class="field">
+            <label>Chassis Business Unit </label>
+            <input type="text" placeholder="Chassis Business Unit" id="txt_claim_details_view_chassis_business_unit" formControlName="CHASSIS_BUSINESS_UNIT" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Chassis No <span class="required">*</span></label>
+            <input type="text" placeholder="Chassis No" id="txt_claim_details_view_chassis_no" formControlName="CHASSIS_NO" readonly>
+          </div>
+        </div>
+      
+        <div class="four fields">
+          <div class="field">
+            <label>LOB </label>
+            <input type="text" placeholder="LOB" id="txt_claim_details_view_lob" formControlName="LOB" readonly>
+          </div>
+        
+          <div class="field">
+            <label>PPL </label>
+            <input type="text" placeholder="PPL" id="txt_claim_details_view_ppl" formControlName="PPL" readonly>
+          </div>
+        
+          <div class="field">
+            <label>PL </label>
+            <input type="text" placeholder="PL" id="txt_claim_details_view_pl" formControlName="PL" readonly>
+          </div>
+      
+          <div class="field">
+            <label>VC </label>
+            <input type="text" placeholder="VC" id="txt_claim_details_view_vc" formControlName="VC" readonly>
+          </div>
+        </div>
+      
+        <div class="four fields">
+          <div class="field">
+            <label>TM Invoice No </label>
+            <input type="text" placeholder="TM Invoice No" id="txt_claim_details_view_tm_invoice_no" formControlName="TM_INVOICE_NO" readonly>
+          </div>
+      
+          <div class="field">
+            <label>TM Invoice Date </label>
+            <div class="ui calendar" id="cal_claim_details_view_tm_invoice_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_tm_invoice_date" type="text" placeholder="TM Invoice Date" class='datepicker' autocomplete="off" formControlName="TM_INVOICE_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+      
+          <div class="field">
+            <label>Manufacturing Date </label>
+            <div class="ui calendar" id="cal_claim_details_view_manufacturing_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_manufacturing_date" type="text" placeholder="Manufacturing Date" class='datepicker' autocomplete="off" formControlName="MANUFACTURING_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+      
+          <div class="field">
+            <label>Account Type </label>
+            <input type="text" placeholder="Account Type" id="txt_claim_details_view_account_type" formControlName="ACCOUNT_TYPE" readonly>
+          </div>
+        </div>
+      
+        <div class="four fields">
+          <div class="field">
+            <label>Dealer Invoice No </label>
+            <input type="text" placeholder="Dealer Invoice No" id="txt_claim_details_view_dealer_invoice_no" formControlName="DEALER_INVOICE_NO" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Dealer Invoice Date </label>
+            <div class="ui calendar" id="cal_claim_details_view_dealer_invoice_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_dealer_invoice_date" type="text" placeholder="Dealer Invoice Date" class='datepicker' autocomplete="off" formControlName="DEALER_INVOICE_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+      
+          <div class="field">
+            <label>Test Drive Vehicle </label>
+            <input type="text" placeholder="Test Drive Vehicle" id="txt_claim_details_view_test_drive_vehicle" formControlName="TEST_DRIVE_VEHICLE" readonly>
+          </div>
+      
+          <div class="field">
+            <label>VC Category</label>
+            <input type="text" placeholder="VC Category" id="txt_claim_details_view_vc_category" formControlName="VC_CATEGORY" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Delivery Status</label>
+            <input type="text" placeholder="Delivery Status" id="txt_claim_details_view_delivery_status" formControlName="DELIVERY_STATUS" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Registration Type</label>
+            <input type="text" placeholder="Registration Type" id="txt_claim_details_view_registration_type" formControlName="REGISTRATION_TYPE" readonly>
+          </div>
+      
+          <div class="field">
+            <label>Booking Date </label>
+            <div class="ui calendar" id="cal_claim_details_view_booking_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_claim_details_view_booking_date" type="text" placeholder="Booking Date" class='datepicker' autocomplete="off" formControlName="BOOKING_DATE" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Stock Transfer </label>
+            <input type="text" placeholder="Stock Transfer" id="txt_claim_details_view_stock_transfer" formControlName="STOCK_TRANSFER" readonly>
+          </div>
+        </div>
+
+        <div class="four fields">
+          <div class="field">
+            <label>Fuel Type</label>
+            <input type="text" placeholder="Fuel Type" id="txt_claim_details_view_fuel_type" formControlName="FUEL_TYPE" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="four fields">
+    <div class="field">
+      <label>Is TMI Auto Verified?</label>
+      <input type="text" placeholder="Is TMI Auto Verified?" id="txt_claim_details_view_is_tmi_auto_verified" formControlName="IS_TMI_AUTO_VERIFIED" readonly>
+    </div>
+
+    <div class="field">
+      <label>Is Loyalty Auto Verified?</label>
+      <input type="text" placeholder="Is Loyalty Auto Verified?" id="txt_claim_details_view_is_loyalty_auto_verified" formControlName="IS_LOYALTY_AUTO_VERIFIED" readonly>
+    </div>
+
+    <div class="field">
+      <label>Is Exchnage Verified?</label>
+      <input type="text" placeholder="Is Exchnage Verified?" id="txt_claim_details_view_is_exchange_verified" formControlName="IS_EXCHANGE_VERIFIED" readonly>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_available_discount_external'>
+    <div class="header">
+      Discount Distribution
+    </div>
+    <i class="close icon" (click)='closeAvailableDiscount()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="availableDiscountLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_avail_concession_external'>
+    <div class="header">
+      Concession Distribution
+    </div>
+    <i class="close icon" (click)='closeAvailConcession()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="availConcessionLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_actual_concession_crm_external'>
+    <div class="header">
+      CRM Concession Details
+    </div>
+    <i class="close icon" (click)='closeActualConcessionCRM()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="actualConcessionCRMLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_crm_credit_amount_external'>
+    <div class="header">
+      CRM Credit Note Details
+    </div>
+    <i class="close icon" (click)='closeCRMCreditAmount()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="crmCreditAmountLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</form>

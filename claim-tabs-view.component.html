@@ -1,0 +1,112 @@
+<p-toast position="top-right" key="claimTabsViewMessage"></p-toast>
+
+<form class="ui form segment top-section">
+  <div class='row'>
+    <div class="one fields mb-0">
+      <div class="field centered">
+        <div class="ui mini steps" id="section-tabs">
+          <a class="completed active step" id='first'>
+            <div class="content">
+              <div class="title"> Claims Details </div>
+            </div>
+          </a> 
+          <a class="step" id='second' [ngClass]="isEW == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title">EW Details </div>
+            </div>
+          </a>
+          <a class="step" id='third' [ngClass]="isAMC == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title">AMC Details </div>
+            </div>
+          </a>
+          <a class="step" id='fourth' [ngClass]="isTMI == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> Insurance Policy </div>
+            </div>
+          </a>
+          <a class="step" id='fifth' [ngClass]="isNFADetails == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> NFA Details</div>
+            </div>
+          </a>
+          <a class="step" id='sixth' [ngClass]="isDealeConfirmation == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> Dealer Confirmation Audit </div>
+            </div>
+          </a>
+          <a class="step" id='seventh' [ngClass]="isFinancier == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> Financier Details</div>
+            </div>
+          </a>
+          <a class="step" id='eighth' [ngClass]="isExchange == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> Exchange Details</div>
+            </div>
+          </a>
+          
+          <a class="step" id='ninth' [ngClass]="isLoyalty == true ? 'display-unset' : 'display-none'" style="text-align: center;">
+            <div class="content">
+              <div class="title"> Loyalty Details </div>
+            </div>
+          </a>
+          <a class="step" id='tenth'>
+            <div class="content">
+              <div class="title"> Documents </div>
+            </div>
+          </a>
+          <a class="step" id='eleventh'>
+            <div class="content">
+              <div class="title"> Action History </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row first-form app-form">
+      <ng-template [ngComponentOutlet]="claimsDetailsViewLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row second-form app-form">
+      <ng-template [ngComponentOutlet]="ewDetailsLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row third-form app-form">
+      <ng-template [ngComponentOutlet]="amcDetailsLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row fourth-form app-form">
+      <ng-template [ngComponentOutlet]="insurancePolicyLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row fifth-form app-form">
+      <ng-template [ngComponentOutlet]="nfaDetailsLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row sixth-form app-form">
+      <ng-template [ngComponentOutlet]="dealerConfirmationLazyComp | async"></ng-template>
+   </div>
+
+   <div class="row seventh-form app-form">
+     <ng-template [ngComponentOutlet]="financierLazyComp | async"></ng-template>
+   </div>
+
+   <div class="row eighth-form app-form">
+     <ng-template [ngComponentOutlet]="exchangeLazyComp | async"></ng-template>
+   </div>
+
+   <div class="row ninth-form app-form">
+     <ng-template [ngComponentOutlet]="loyaltyLazyComp | async"></ng-template>
+   </div>
+
+    <div class="row tenth-form app-form">
+      <ng-template [ngComponentOutlet]="documentsViewLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row eleventh-form app-form">
+      <ng-template [ngComponentOutlet]="actionHistoryLazyComp | async"></ng-template>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,39 @@
+<p-toast position="top-right" key="documentViewMessage"></p-toast>
+
+<form>
+  <div class="row">
+    <div class="sixteen wide field box-shadow-custom">
+      <p-table [value]="documentObj" [loading]="documentLoading" styleClass="p-datatable-striped" [rowHover]="true" id="documentViewTable">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px!important;white-space: break-spaces;">Document Id</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Claim Id</th>
+            <th style="width: 200px!important;white-space: break-spaces;">Document Type</th>
+            <th style="width: 250px!important;white-space: break-spaces;">Document Name</th>
+            <th style="width: 150px!important;white-space: break-spaces;">Auto Validated</th>
+            <th style="width: 230px!important;white-space: break-spaces;" class='text-center'>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-documentItem>
+          <tr>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.doc_ID }}</td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.claim_ID }}</td>
+            <td style="width: 200px!important;white-space: break-spaces;">{{ documentItem.document_TYPE }}</td>
+            <td style="width: 250px!important;white-space: break-spaces;">
+              <a (click)="downloadDocument(documentItem)" style="cursor: pointer;" class="toggle-button">{{ documentItem.document_NAME }}</a>
+            </td>
+            <td style="width: 150px!important;white-space: break-spaces;">{{ documentItem.is_AUTO_VERIFIED }}</td>
+            <td style="width: 230px!important;white-space: break-spaces;" class='text-center'>
+              <button type="button" pButton pRipple icon="pi pi-download" pTooltip="Download File" tooltipPosition="bottom" class="p-button-success p-mr-2" (click)="downloadDocument(documentItem)"></button>
+            </td>  
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

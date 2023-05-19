@@ -1,0 +1,173 @@
+<p-toast position="top-right" key="beneGroupClaimsDashboardMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+<div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i>Beneficiary Group Claim Scheduler </a> </div>
+
+  <div class='row'>
+    <div class="ui accordion column field">
+      <div class="title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>Role</label>
+            <select class='ui dropdown selection search' id="dd_dashboard_role">
+              <option *ngFor="let roleItem of roleList" value="{{ roleItem.ROLE_ID }}">{{ roleItem.ROLE_DESCRIPTION }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Position</label>
+            <select class='ui dropdown selection search' id="dd_dashboard_position">
+              <option *ngFor="let positionItem of positionList" value="{{ positionItem.position }}">{{ positionItem.position }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Business Unit</label>
+            <select class='ui dropdown selection search' id="dd_dashboard_business_unit">
+              <option *ngFor="let businessUnitItem of businessUnitList" value="{{ businessUnitItem.text }}">{{ businessUnitItem.value }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Date Type</label>
+            <select class='ui selection dropdown' id="dd_group_dashboard_date_type">
+              <option value="NA">NA</option>
+              <option value="C">Created On</option>
+              <option value="U">Updated On</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Start Date </label>
+            <div class="ui calendar" id="cal_dashboard_start_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_dashboard_start_date" type="text" placeholder="Start Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>End Date </label>
+            <div class="ui calendar" id="cal_dashboard_end_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="EndDate" id="txt_dashboard_end_date" type="text" placeholder="End Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Dealer Code</label>
+            <input type="text" placeholder="Enter Dealer Code (Comma Seperated)" id="txt_dashboard_dealer_code" autocomplete="off" >
+          </div>
+
+          <div class ="field"></div>
+          <div class ="field"></div>
+
+          <div class='field'>
+            <div class="field pull-right">
+              <label>&nbsp;</label>
+              <div class="ui buttons">
+                <button class="ui button green_btn" id="btn_dealer_dashboard_search" (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id="btn_dealer_dashboard_reset" (click)="clearFilter(false)">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui divider"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row ui grid' style="margin-top: 10px;margin-bottom: 10px">
+    <div class='four wide field page-information'[hidden]="!isBeneGroupClaimObj">
+      <label>Show </label><span></span>
+      <select (change)="beneGroupClaimSizeChanged($event)" id="dd_dashboard_bene_individual_size" class="ui dropdown">
+        <option value=10>10</option>
+        <option value=25>25</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+      </select>
+      <label>Entries </label>
+    </div>
+    <div class='twelve wide field pagination' *ngIf="isBeneGroupClaimObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setBeneGroupClaimPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setBeneGroupClaimPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setBeneGroupClaimPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}"  (click)="setBeneGroupClaimPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setBeneGroupClaimPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+    <div class="sixteen wide field">
+      <p-table class="box-shadow-custom" [value]="groupClaimObj" [loading]="beneGroupClaimLoading" dataKey="" styleClass="p-datatable-striped" [(selection)]="selectedGroupClaims" [rowHover]="true" id="beneGroupClaimTable">
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex">
+            <button class="ui button light_indigo_btn" id="btn_dashboard_execute"  (click)="postGroupClaim()" [disabled]="!isBeneGroupClaimObj">Create Group</button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" style="width: 100%!important; min-width: 100%!important;">
+          <tr>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;" [ngClass]="beneGroupClaimLoading == true ? '' : 'sticky-column'">Claim Id</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">DealerCode</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">PPL</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">Scheme ID</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">Created On</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">Retail Month</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">Claim Type</th>
+            <th style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">Custody</th>
+            <th style="width: 160px!important;min-width: 160px!important;white-space: break-spaces;">Status</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-groupClaimItem let-i="rowIndex">
+          <tr>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;" [ngClass]="beneGroupClaimLoading == true ? '' : 'sticky-column'">{{ groupClaimItem.claim_ID }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.dealercode }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.ppl }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.scheme_ID }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.created_ON }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.retail_MONTH }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.claim_TYPE }}</td>
+            <td style="width: 130px!important;min-width: 130px!important;white-space: break-spaces;">{{ groupClaimItem.cust_ROLE }}</td>
+            <td style="width: 160px!important;min-width: 160px!important;white-space: break-spaces;">{{ groupClaimItem.st_DESC }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="20">No Data Available</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class='sixteen wide field pagination' style="margin-top: 10px; margin-bottom: 10px;" *ngIf="isBeneGroupClaimObj">
+      <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setBeneGroupClaimPage(1)" class="icon item">
+          First
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setBeneGroupClaimPage(pager.currentPage - 1)" class="icon item">
+          Previous
+        </a>
+        <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setBeneGroupClaimPage(page)" class="icon item">
+          {{page}}
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setBeneGroupClaimPage(pager.currentPage + 1)" class="icon item">
+          Next
+        </a>
+        <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setBeneGroupClaimPage(pager.totalPages)" class="icon item">
+          Last
+        </a>
+      </div>
+    </div>
+  </div>
+</form>

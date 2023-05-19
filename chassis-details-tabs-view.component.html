@@ -1,0 +1,103 @@
+<p-toast position="top-right" key="chassisDetailsTabsViewMessage"></p-toast>
+
+<form class="ui form segment top-section" [formGroup]="chassisDetailsForm">
+  <div class="row">
+    <div style="padding-bottom:30px">
+      <p style="color: #40408a !important;" class="custom-message">
+        Claims and Retail History for Chassis Number : {{ chassisNo }}
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="five fields">
+      <div class="field">
+        <label>Business Unit </label>
+        <input type="text" id="txt_chassis_details_view_chassi_BU" formControlName="BU" placeholder="Business Unit" readonly>
+      </div>
+
+      <div class="field">
+        <label>LOB</label>
+        <input type="text" id="txt_chassis_details_view_lob" formControlName="LOB" placeholder="LOB" readonly>
+      </div>
+
+      <div class="field">
+        <label>PPL</label>
+        <input type="text" id="txt_chassis_details_view_ppl" formControlName="PPL" placeholder="PPL" readonly>
+      </div>
+
+      <div class="field">
+        <label>PL</label>
+        <input type="text" id="txt_chassis_details_view_pl" formControlName="PL" placeholder="PL" readonly>
+      </div>
+
+      <div class="field">
+        <label>VC</label>
+        <input type="text" id="txt_chassis_details_view_vc" formControlName="VC" placeholder="VC" readonly>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class="one fields mb-0">
+      <div class="field centered">
+        <div class="ui mini steps" id="section-tabs">
+          <a class="completed active step" id='first'>
+            <div class="content">
+              <div class="title"> Claims History </div>
+            </div>
+          </a>
+          <a class="step" id='second'>
+            <div class="content">
+              <div class="title"> Retails History </div>
+            </div>
+          </a>
+          <a class="step" id='third'>
+            <div class="content">
+              <div class="title"> Offtake Cancellation History </div>
+            </div>
+          </a>
+          <a class="step" id='fourth'>
+            <div class="content">
+              <div class="title"> Concession Breakup </div>
+            </div>
+          </a>
+          <a class="step" id='fifth'>
+            <div class="content">
+              <div class="title"> Credit Note Breakup </div>
+            </div>
+          </a>
+          <a class="step" id='sixth'>
+            <div class="content">
+              <div class="title"> Concession Tracking </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row first-form app-form">
+      <ng-template [ngComponentOutlet]="claimsHistoryLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row second-form app-form">
+      <ng-template [ngComponentOutlet]="retailHistoryLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row third-form app-form">
+      <ng-template [ngComponentOutlet]="offtakeCancellationHistoryLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row fourth-form app-form">
+      <ng-template [ngComponentOutlet]="concessionBreakupLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row fifth-form app-form">
+      <ng-template [ngComponentOutlet]="creditNoteBreakupLazyComp | async"></ng-template>
+    </div>
+
+    <div class="row sixth-form app-form">
+      <ng-template [ngComponentOutlet]="concessionTrackingLazyComp | async"></ng-template>
+    </div>
+  </div>
+</form>

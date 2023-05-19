@@ -1,0 +1,500 @@
+<p-toast position="top-right" key="claimsBlockingMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+    <p-confirmDialog [style]="{width: '50vw'}" key="claimsBlockingDialog" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+  
+    <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Claims Blocking</a> </div>
+    <div class='row'>
+        <div class="ui accordion column field">
+          <div class="title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+          <div class="content">
+            <div class="five fields" style="margin-left: 10px!important;">
+                <div class="field">
+                    <label>Business Unit</label>
+                    <select id="dd_claims_blocking_business_unit" placeholder="Select Business Unit"  class="ui selection dropdown search" required>
+                    <option *ngFor="let buItem of businessUnitList" value="{{ buItem.text }}">{{ buItem.value }}</option>
+                    </select>
+                </div>
+    
+                <div class="field">
+                  <label>Claim Type</label>
+                  <select class='ui selection dropdown' id="dd_claims_blocking_claim_type_hardcoded">
+                    <option selected disabled value="">Claim Type</option>
+                    <option *ngFor="let claimTypeHardCodeItem of claimTypeHardCodeList" value="{{ claimTypeHardCodeItem.value }}">{{ claimTypeHardCodeItem.description }}</option>
+                  </select>
+                </div>
+
+                <div class="field" *ngIf="isIndividualClaim">
+                    <label>Claim Id</label>
+                    <input type="text" placeholder="Enter Claim Id (Comma Seperated)" id="txt_claims_blocking_individual_claim_id" autocomplete="off">
+                </div>
+
+                <div class="field" *ngIf="!isIndividualClaim">
+                    <label>Group Claim Id</label>
+                    <input type="text" placeholder="Enter Group Claim Id (Comma Seperated)" id="txt_claims_blocking_group_claim_id" autocomplete="off">
+                </div>
+
+                <div class="field">
+                    <label>Chassis No</label>
+                    <input type="text" placeholder="Enter Chassis No (Comma Seperated)" id="txt_claims_blocking_chassis_no" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label>Dealer Code</label>
+                  <div class="ui icon input">
+                      <input type="text" id="txt_claims_blocking_dealer" value="" placeholder="Enter Dealer Code(Comma Seperated)">
+                  </div>
+                </div>
+            </div>
+
+            <div class="five fields" style="margin-left: 10px!important;">
+                
+                <div class="field">
+                    <label>Scheme Type</label>
+                    <select  class="ui selection dropdown search"  id="dd_claims_blocking_scheme_type">
+                      <option value=''>Select Scheme Type</option>
+                      <option *ngFor="let typeItem of schemeTypeList" value="{{ typeItem.stm_ID }}">{{ typeItem.scheme_TYPE }}</option>
+                    </select>
+                </div>
+
+                <div class="field" >
+                    <label>Scheme</label>
+                    <select  class="ui selection dropdown search"  id="dd_claims_blocking_scheme">
+                       <option value=''>Select Scheme</option>
+                       <option *ngFor="let schemeItem of schemeList" value="{{ schemeItem.schemeId }}">{{ schemeItem.schemeName }}</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Month-Year</label>
+                    <div class="ui calendar" id="cal_claims_blocking_month_year_date">
+                        <div class="ui input left icon"> <i class="calendar icon"></i><input id="txt_claims_blocking_month_year_date" name="MonthYear" type="text" placeholder="Select Month Year" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+                    </div>   
+                </div>
+
+                <div class="field">
+                    <label>Block Type</label>
+                    <select class='ui selection dropdown search' id="dd_claims_blocking_claim_type">
+                        <option value="Open">Open Claims</option>
+                        <option value="Temporary Blocked">Temporary Blocked Claims</option>
+                        <option value="Permanently Blocked">Permanently Blocked Claims</option>
+                    </select>
+                </div>
+
+                <div class='field' >
+                  <div class="field pull-right">
+                    <label>&nbsp;</label>
+                    <div class="ui buttons">
+                      <button class="ui button green_btn" id="btn_search" (click)="searchFilter(false)">Search</button>
+                      <div class="or"></div>
+                      <button class="ui button red_btn" id="btn_reset" (click)="clearFilter()">Reset</button>
+                    </div>
+                  </div>
+              </div>
+            </div>                              
+            <div class="ui divider"></div>
+           </div>
+        </div>
+    </div>
+
+    <div class="field"></div>
+    <div class="row">
+        <div class="five fields">
+            <div class="field" [hidden]="!isBlock">
+                <label>Block Criteria</label>
+                <select class='ui selection dropdown search' id="dd_claims_blocking_block_criteria">
+                    <option value="" disabled selected>Block Criteria</option>
+                    <option value="TC">Claims + Criteria Temporary Block</option>
+                    <option value="T">Only Claims Temporary Block</option>
+                    <option value="PC">Claims + Criteria Permanent Block</option>
+                    <option value="P">Only Claims Permanent Block</option>
+                    <option value="CT">Criteria Temporary Block</option>
+                    <option value="CP">Criteria Permanent Block</option>
+                </select>
+            </div>
+
+            <div class="field" [hidden]="!isUnblock && !isUnblockBlock">
+                <label>Block Criteria</label>
+                <select class='ui selection dropdown search' id="dd_claims_blocking_unblock_criteria">
+                    <option value="" disabled selected>Block Criteria</option>
+                    <option value="U">All Claims Unblock</option>
+                    <option value="SU">Selected Claims Unblock</option>
+                    <option value="PB">All Claims Permanent Block</option>
+                    <option value="SB">Selected Permanent Block</option>
+                    <option value="UC">Unblock Criteria</option>
+                    <option value="UCA">Unblock Criteria + All Claims</option>
+                </select>
+            </div>
+
+            <div class="field" [hidden]="!isBlock">
+                <label>&nbsp;</label>
+                <button class="ui button red" style="margin-right: 10px;" (click)="blockClaim()" [disabled]="!isBlockCriteriaSelected"> Block </button>
+            </div>
+
+            <div class="field" [hidden]="!isUnblock">
+                <label>&nbsp;</label>
+                <button class="ui button blue" style="margin-right: 10px;" (click)="unblockClaim()" [disabled]="!isUnblockCriteriaSelected"> Unblock </button>
+            </div>
+
+            <div class="field" [hidden]="!isUnblockBlock">
+                <label>&nbsp;</label>
+                <button class="ui button red" style="margin-right: 10px;" (click)="permanentBlockClaim()"> Block </button>
+            </div>
+
+            <div [hidden]="isBlock">&nbsp;</div>
+            <div [hidden]="isUnblock">&nbsp;</div>
+            <div>&nbsp;</div>
+        </div>
+
+        <div class="ui divider" [hidden]="!isBlock && !isUnblock"></div>
+    </div>
+
+    <div class="row" style="margin-top: 20px!important;">
+        <div id="claimsBlockingActiveTab" class="ui top attached tabular menu">
+          <a id="tab_claims_blocking_individual_claim" class="active item" data-tab="first">Individual Claim</a>
+          <a id="tab_claims_blocking_group_claim" class="item" data-tab="second">Group Claim</a>
+          <a id="tab_claims_blocking_block_criteria" class="item" data-tab="third" >Block Criteria</a>
+        </div>
+        
+        <div id="individualClaimTableTab" class="ui bottom attached tab segment active first" data-tab="first">
+            <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+              <div class='four wide field page-information' [hidden]="!isIndividualClaimObj">
+                <label>Show </label><span></span>
+                <select (change)="individualClaimSizeChanged($event)" id="dd_claim_blocking_individual_size" class="ui dropdown">
+                  <option value=10>10</option>
+                  <option value=25>25</option>
+                  <option value=50>50</option>
+                  <option value=100>100</option>
+                </select>
+                <label>Entries </label>
+              </div>
+              <div class='twelve wide field pagination' *ngIf="isIndividualClaimObj">
+                <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+                  <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+                    First
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+                    Previous
+                  </a>
+                  <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+                    {{page}}
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+                    Next
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+                    Last
+                  </a>
+                </div>
+              </div>
+              <div class="sixteen wide field">
+                <p-table class="box-shadow-custom" [value]="individualClaimObj" [loading]="individualClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedIndividualClaims" [rowHover]="true" id="individualClaimTable">
+                  <ng-template pTemplate="header" style="width: 100%!important; min-width: 100%!important;">
+                    <tr>
+                        <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isIndividualClaimObj" (click)="getSelectedIndividualClaimId()" [disabled]="isSelectedCheckBox"  ></p-tableHeaderCheckbox></th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'">Claim ID</th>
+                        <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Chassis No</th>
+                        <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Scheme Name</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>		
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>	
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Type</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GDC Approved Amount</th>			
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Name</th>
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created On</th>		
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Remark</th>	
+                        <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Role</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-individualClaimItem let-i="rowIndex">
+                    <tr>
+                        <td style="width: 3rem" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="individualClaimItem" (click)="getSelectedIndividualClaimId()" [disabled]="isSelectedCheckBox"></p-tableCheckbox></td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'" (click)="openIndividualClaimView(individualClaimItem.chassis_NO, individualClaimItem.claim_ID, individualClaimItem.scheme_ID, individualClaimItem.st_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ individualClaimItem.claim_ID }}</td>
+                        <td style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(individualClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ individualClaimItem.chassis_NO }}</td>
+                        <td style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(individualClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ individualClaimItem.scheme_NAME }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.block_FLAG }}
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.claim_AMOUNT }}</td> 
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.claim_TYPE }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.claim_AMT_GDC }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.dealercode }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.dlr_NAME }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.created_ON | date:"dd/MM/yyyy" }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.remarks }}</td>
+                        <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.role_DESCRIPTION }}</td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="22">No Data Available</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div class='sixteen wide field pagination' style="margin-top: 20px;" *ngIf="isIndividualClaimObj">
+                <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+                  <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+                    First
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+                    Previous
+                  </a>
+                  <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+                    {{page}}
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+                    Next
+                  </a>
+                  <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+                    Last
+                  </a>
+                </div>
+             </div>
+         </div>
+     </div>
+
+     <div id="groupClaimTableTab" class="ui bottom attached tab segment second" data-tab="second">
+        <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+          <div class='four wide field page-information' [hidden]="!isGroupClaimObj">
+            <label>Show   </label><span></span>
+            <select (change)="groupClaimSizeChanged($event)" id="dd_claims_blocking_group_size" class="ui dropdown">
+              <option value=10>10</option>
+              <option value=25>25</option>
+              <option value=50>50</option>
+              <option value=100>100</option>
+            </select>
+            <label>Entries   </label>
+          </div>
+          <div class='twelve wide field pagination' *ngIf="isGroupClaimObj">
+            <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+                First
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+                Previous
+              </a>
+              <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+                {{page}}
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+                Next
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+                Last
+              </a>
+            </div>
+          </div>
+          <div class="sixteen wide field">
+            <p-table class="box-shadow-custom" [value]="groupClaimObj" [loading]="groupClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedGroupClaims" [rowHover]="true" id="groupClaimTable">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isGroupClaimObj" (click)="getSelectedGroupClaimId()" [disabled]="isSelectedCheckBox" ></p-tableHeaderCheckbox></th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'">Group Claim Id</th>
+                  <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>		
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Amount</th>	
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">GDC Approved Amount</th>		
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created On</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Remarks</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Custody Type</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-groupClaimItem let-i="rowIndex">
+                <tr>
+                  <td style="width: 3rem" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimItem" (click)="getSelectedGroupClaimId()" [disabled]="isSelectedCheckBox" ></p-tableCheckbox></td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'" (click)="openGroupClaimView(groupClaimItem.g_CLAIM_ID, groupClaimItem.st_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ groupClaimItem.g_CLAIM_ID }}</td>
+                  <td style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(groupClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ groupClaimItem.scheme_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.block_FLAG }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.claim_AMT }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.gdc_APP_AMT }}</td> 
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.dealercode }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.created_ON | date:"dd/MM/yyyy" }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.remarks }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.role_DESCRIPTION }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isGroupClaimObj">
+            <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+                First
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+                Previous
+              </a>
+              <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+                {{page}}
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+                Next
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+                Last
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="criteriaClaimTableTab" class="ui bottom attached tab segment second" data-tab="third">
+        <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+          <div class='four wide field page-information' [hidden]="!isCriteriaClaimObj">
+            <label>Show   </label><span></span>
+            <select (change)="criteriaClaimSizeChanged($event)" id="dd_claims_blocking_criteria_Claim_size" class="ui dropdown">
+              <option value=10>10</option>
+              <option value=25>25</option>
+              <option value=50>50</option>
+              <option value=100>100</option>
+            </select>
+            <label>Entries   </label>
+          </div>
+          <div class='twelve wide field pagination' *ngIf="isCriteriaClaimObj">
+            <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setCriteriaClaimPage(1)" class="icon item">
+                First
+              </a>
+              <a [ngClass]="{disabled:bpager.currentPage === 1}" (click)="setCriteriaClaimPage(bpager.currentPage - 1)" class="icon item">
+                Previous
+              </a>
+              <a *ngFor="let page of bpager.pages" [ngClass]="{active:bpager.currentPage === page}" (click)="setCriteriaClaimPage(page)" class="icon item">
+                {{page}}
+              </a>
+              <a [ngClass]="{disabled:bpager.currentPage === bpager.totalPages}" (click)="setCriteriaClaimPage(bpager.currentPage + 1)" class="icon item">
+                Next
+              </a>
+              <a [ngClass]="{disabled:bpager.currentPage === bpager.totalPages}" (click)="setCriteriaClaimPage(bpager.totalPages)" class="icon item">
+                Last
+              </a>
+            </div>
+          </div>
+          <div class="sixteen wide field">
+            <p-table class="box-shadow-custom" [value]="criteriaClaimObj" [loading]="criteriaClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedCriteriaBlockClaims" [rowHover]="true" id="criteriaBlockClaimTable">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="criteriaClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isCriteriaClaimObj"  (click)="getSelectedCrieria()" ></p-tableHeaderCheckbox></th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Business Unit</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Chassis No</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Id</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Sequence No</th>	
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Month</th>		
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Year</th>	
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created On</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Status</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-criteriaClaimItem let-i="rowIndex">
+                <tr>
+                  <td style="width: 3rem" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="criteriaClaimItem" (click)="getSelectedCrieria()"></p-tableCheckbox></td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.bu_ID }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(criteriaClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ criteriaClaimItem.chassis_NO }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(criteriaClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ criteriaClaimItem.scheme_ID }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.dealer_CODE }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.seq_NO }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.month }}</td> 
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.year }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.created_ON | date:"dd/MM/yyyy" }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ criteriaClaimItem.active_FLAG }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isCriteriaClaimObj">
+            <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setCriteriaClaimPage(1)" class="icon item">
+                First
+              </a>
+              <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setCriteriaClaimPage(bpager.currentPage - 1)" class="icon item">
+                Previous
+              </a>
+              <a *ngFor="let page of bpager.pages" [ngClass]="{active:bpager.currentPage === page}" (click)="setCriteriaClaimPage(page)" class="icon item">
+                {{page}}
+              </a>
+              <a [ngClass]="{disabled:bpager.currentPage === bpager.totalPages}" (click)="setCriteriaClaimPage(bpager.currentPage + 1)" class="icon item">
+                Next
+              </a>
+              <a [ngClass]="{disabled:bpager.currentPage === bpager.totalPages}" (click)="setCriteriaClaimPage(bpager.totalPages)" class="icon item">
+                Last
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui large modal coupled" id='blockciteria'>
+      <div class="header">
+        ERROR
+      </div>
+      <i class="close icon" (click)='closeError()'></i>
+      <div class="scrolling content">
+        <div class="body">
+          <div class="field">
+            <p style = "font-size: 17px; margin-bottom: 0px;" class='text-center'>Please Select Minimum 2 parameters for Block criteria.</p>
+         </div>
+        </div>
+      </div>
+    </div>
+
+    
+      <div class="ui longer fullscreen coupled modal" id='modal_individual_claim_blocking_view'>
+        <div class="header">
+          View Individual Claim
+        </div>
+        <i class="close icon" (click)='closeIndividualClaimView()'></i>
+        <div class="scrolling content">
+          <div class="body">
+            <ng-template [ngComponentOutlet]="individualClaimViewTabsLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui fullscreen coupled modal" id='model_individual_claim_blocking_url_view'>
+        <div class="header">
+          View Individual Claim
+        </div>
+        <i class="close icon" (click)='closeIndividualClaimView()'></i>
+        <div class="scrolling content">
+          <div class="body">
+            <object type="text/html" [data]="sharedService.individualClaimViewUrl | safe" width="100%"></object>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui longer fullscreen coupled modal" id='modal_chassis_view'>
+        <div class="header">
+          View Chassis
+        </div>
+        <i class="close icon" (click)='closeChassisView()'></i>
+        <div class="scrolling content">
+          <div class="body">
+            <ng-template [ngComponentOutlet]="chassisViewTabsLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui fullscreen coupled modal" id='model_blocking_claims_scheme_url_view'>
+        <div class="header">
+          View Scheme
+        </div>
+        <i class="close icon" (click)='closeSchemeView()'></i>
+        <div class="scrolling content">
+          <div class="body">
+            <object type="text/html" [data]="schemeViewUrl | safe" width="100%"></object>
+          </div>
+        </div>
+      </div>
+</form>

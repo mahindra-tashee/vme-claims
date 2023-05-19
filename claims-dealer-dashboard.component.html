@@ -1,0 +1,795 @@
+<p-toast position="top-right" key="claimsDealerDashboardMessage"></p-toast>
+
+<div class='loader'><img src='./assets/loader-transparent.gif'></div>
+
+<form class="ui form secondary segment">
+  <div class="field"> <a class="ui ribbon label" style="margin-top:-5px;margin-left:2px; "><i class="edit icon"></i> Claims Dashboard </a> </div>
+
+  <div class='row'>
+    <div class="ui accordion column field">
+      <div class="active title icon" style="margin-left: 10px!important;" (click)="toggleSearchFilters()"><i [ngClass]="isToggleSearchFilters == true ? 'chevron circle up icon' : 'chevron circle down icon'"></i> Search Filters </div>
+      <div class="active content">
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" hidden>
+            <label>Business Unit</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_business_unit">
+              <option selected disabled value="">Business Unit</option>
+              <option *ngFor="let businessUnitItem of businessUnitList" value="{{ businessUnitItem.text }}">{{ businessUnitItem.value }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Scheme Type</label>
+            <select class="ui dropdown selection search multiple" id="dd_dealer_dashboard_scheme_type">
+              <option value="" disabled selected hidden>Scheme Type</option>
+              <option *ngFor="let schemeTypeItem of schemeTypeList" value="{{ schemeTypeItem.stm_ID }}">{{ schemeTypeItem.scheme_TYPE }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Scheme </label>
+            <select class="ui dropdown selection search multiple" id="dd_dealer_dashboard_scheme">
+              <option value="" disabled selected hidden>Scheme</option>
+              <option *ngFor="let schemeItem of schemeList" value="{{ schemeItem.schemeId }}">{{ schemeItem.schemeName }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Claim Type</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_claim_type_hardcoded">
+              <option selected disabled value="">Claim Type</option>
+              <option *ngFor="let claimTypeHardCodeItem of claimTypeHardCodeList" value="{{ claimTypeHardCodeItem.value }}">{{ claimTypeHardCodeItem.description }}</option>
+            </select>
+          </div>
+
+          <div class="field" *ngIf="isIndividualClaim">
+            <label>Claim Id</label>
+            <input type="text" placeholder="Enter Claim Id (Comma Seperated)" id="txt_dealer_dashboard_claim_id" autocomplete="off">
+          </div>
+
+          <div class="field" *ngIf="!isIndividualClaim">
+            <label>Group Claim Id</label>
+            <input type="text" placeholder="Enter Group Claim Id (Comma Seperated)" id="txt_dealer_dashboard_group_claim_id" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Chassis No</label>
+            <input type="text" placeholder="Enter Chassis No (Comma Seperated)" id="txt_dealer_dashboard_chassis_no" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="four fields" style="margin-left: 10px!important;">
+          <div class="field" style="width: 20%!important;">
+            <label>Status</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_status">
+              <option selected disabled value="">Status</option>
+              <option *ngFor="let statusItem of statusList" value="{{ statusItem.st_ID }}">{{ statusItem.st_DESC }}</option>
+            </select>
+          </div>
+
+          <div class="field" style="width: 30%!important;">&nbsp;</div>
+          <div class="field" style="width: 30%!important;">&nbsp;</div>
+
+          <div class='field' style="width: 25%!important;">
+            <div class="field pull-right">
+              <label>&nbsp;</label>
+              <div class="ui buttons">
+                <button class="ui button green_btn" id="btn_dealer_dashboard_search" (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id="btn_dealer_dashboard_reset" (click)="clearFilter(false)">Reset</button>
+                <div class="or"></div>
+                <button class="ui button cobalt_btn" id="btn_dealer_dashboard_advance_search" (click)="openAdvanceSearch()">Advance Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 20px!important;">
+    <div id="dealerDashboardActiveTab" class="ui top attached tabular menu">
+      <a id="dealerDashboardIndividualClaimTab" class="active item" data-tab="first">Individual Claim</a>
+      <a id="dealerDashboardGroupClaimTab" class="item" data-tab="second">Group Claim</a>
+    </div>
+
+    <div id="dealerDashboardIndividualClaimTableTab" class="ui bottom attached tab segment active first" data-tab="first">
+      <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class='four wide field page-information' [hidden]="!isIndividualClaimObj">
+          <label>Show   </label><span></span>
+          <select (change)="individualClaimSizeChanged($event)" id="dd_dealer_dashboard_individual_size" class="ui dropdown">
+            <option value=10>10</option>
+            <option value=25>25</option>
+            <option value=50>50</option>
+            <option value=100>100</option>
+          </select>
+          <label>Entries   </label>
+        </div>
+        <div class='twelve wide field pagination' *ngIf="isIndividualClaimObj">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+        <div class="sixteen wide field">
+          <p-table class="box-shadow-custom" [value]="individualClaimObj" [loading]="individualClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedIndividualClaims" [rowHover]="true" id="dealerDashboardIndividualClaimTable">
+            <ng-template pTemplate="caption">
+              <div class="p-d-flex">
+                <button type="button" pButton pRipple icon="pi pi-plus" (click)="initializeIndividualClaimsRegistration()" class="p-button-info p-mr-2 sticky-column-btn-one" pTooltip="New Claim" tooltipPosition="bottom" [disabled]="!isDSADMIN"></button>
+                <button type="button" pButton pRipple icon="pi pi-upload" (click)="importClaims()" class="p-button-upload p-mr-2 sticky-column-btn-two" pTooltip="Bulk Claim Upload" tooltipPosition="bottom"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportIndividualClaims()" class="p-button-success p-mr-2 sticky-column-btn-three" pTooltip="Export Individual Claims Data" tooltipPosition="bottom" [disabled]="!isIndividualClaimObj"></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" style="width: 100%!important; min-width: 100%!important;">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isIndividualClaimObj"></p-tableHeaderCheckbox></th>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'"></th>
+                <th style="width: 4rem!important;min-width: 4rem!important;white-space: break-spaces;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-third'">Action</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-fourth'">Claim Id</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Chassis No</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Stock Transfer Type</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Amount</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Type</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Custody Role</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Status</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Blocking Status</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Remarks</th>
+                <th style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;">Created By</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Created On</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-individualClaimItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="individualClaimItem"></p-tableCheckbox></td>
+                <td style="width: 3rem" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'" *ngIf="individualClaimItem.doc_COUNT > 0; else individualInvalidCount" pTooltip="Documents Uploaded" tooltipPosition="bottom"><i class="paperclip icon"></i></td>
+                <ng-template #individualInvalidCount style="width: 3rem"><td [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-second'" pTooltip="Documents Not Uploaded" tooltipPosition="bottom"></td></ng-template>
+                <td style="width: 4rem!important;min-width: 4rem!important" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-third'">
+                  <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" pTooltip="Edit Individual Claim" (click)="editIndividualClaim(individualClaimItem.chassis_NO, individualClaimItem.claim_ID, individualClaimItem.scheme_ID, individualClaimItem.st_ID)" *ngIf="editButtonIndividual(i)"></button>
+                  <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded light_indigo_btn p-mr-2" pTooltip="View Individual Claim" (click)="openIndividualClaimView(individualClaimItem.chassis_NO, individualClaimItem.claim_ID, individualClaimItem.scheme_ID, individualClaimItem.st_ID)" *ngIf="!editButtonIndividual(i)"></button>
+                </td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="individualClaimLoading == true ? '' : 'sticky-column-fourth'" (click)="openIndividualClaimView(individualClaimItem.chassis_NO, individualClaimItem.claim_ID, individualClaimItem.scheme_ID, individualClaimItem.st_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ individualClaimItem.claim_ID }}</td>
+                <td style="width: 200px!important;min-width: 200px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(individualClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ individualClaimItem.chassis_NO }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button break" (click)="openSchemeView(individualClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ individualClaimItem.scheme_NAME }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(individualClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ individualClaimItem.scheme_ID }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.stock_TRANSFER }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.claim_AMOUNT }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.claim_TYPE }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ individualClaimItem.role_DESCRIPTION }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ individualClaimItem.st_DESC }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.block_FLAG }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ individualClaimItem.remarks }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ individualClaimItem.created_BY }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ individualClaimItem.created_ON | date:"dd-MMM-yyyy" }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="20">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isIndividualClaimObj">
+          <div *ngIf="pager.pages && pager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(1)" class="icon item">
+                First
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === 1}" (click)="setIndividualClaimPage(pager.currentPage - 1)" class="icon item">
+                Previous
+            </a>
+            <a *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" (click)="setIndividualClaimPage(page)" class="icon item">
+                {{page}}
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.currentPage + 1)" class="icon item">
+                Next
+            </a>
+            <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" (click)="setIndividualClaimPage(pager.totalPages)" class="icon item">
+                Last
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dealerDashboardGroupClaimTableTab" class="ui bottom attached tab segment second" data-tab="second">
+      <div class='row ui grid' style="margin-top: 20px;margin-bottom: 10px;">
+        <div class='four wide field page-information' [hidden]="!isGroupClaimObj">
+          <label>Show   </label><span></span>
+          <select (change)="groupClaimSizeChanged($event)" id="dd_dealer_dashboard_group_size" class="ui dropdown">
+            <option value=10>10</option>
+            <option value=25>25</option>
+            <option value=50>50</option>
+            <option value=100>100</option>
+          </select>
+          <label>Entries   </label>
+        </div>
+        <div class='twelve wide field pagination' *ngIf="isGroupClaimObj">
+          <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+        <div class="sixteen wide field">
+          <p-table class="box-shadow-custom" [value]="groupClaimObj" [loading]="groupClaimLoading" styleClass="p-datatable-striped" [(selection)]="selectedGroupClaims" [rowHover]="true" id="dealerDashboardGroupClaimTable">
+            <ng-template pTemplate="caption">
+              <div class="p-d-flex">
+                <button type="button" pButton pRipple icon="pi pi-plus" (click)="initializeGroupClaimsRegistration()" class="p-button-info p-mr-2 sticky-column-btn-one" pTooltip="New Claim" tooltipPosition="bottom" [disabled]="!isDSADMIN"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportGroupClaims()" class="p-button-success p-mr-2 sticky-column-btn-two" pTooltip="Export Group Claims Data" tooltipPosition="bottom" [disabled]="!isGroupClaimObj"></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableHeaderCheckbox [hidden]="!isGroupClaimObj"></p-tableHeaderCheckbox></th>
+                <th style="width: 3rem!important;min-width: 3rem!important;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'"></th>
+                <th style="width: 4rem!important;min-width: 4rem!important;white-space: break-spaces;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-third'">Action</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-fourth'">Group Claim Id</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Region</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">LOB</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">PPL</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Name</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme Id</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Stock Transfer Type</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Amount</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Custody Role</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Status</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Blocking Status</th>
+                <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Remarks</th>
+                <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Created By</th>
+                <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Created On</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-groupClaimItem let-i="rowIndex">
+              <tr>
+                <td style="width: 3rem" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column'"><p-tableCheckbox [value]="groupClaimItem"></p-tableCheckbox></td>
+                <td style="width: 3rem" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'" *ngIf="groupClaimItem.doc_COUNT > 0; else groupInvalidCount" pTooltip="Documents Uploaded" tooltipPosition="bottom"><i class="paperclip icon"></i></td>
+                <ng-template #groupInvalidCount style="width: 3rem" pTooltip="Documents Not Uploaded" tooltipPosition="bottom"><td [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-second'"></td></ng-template>
+                <td style="width: 4rem!important;min-width: 4rem!important" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-third'">
+                  <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" pTooltip="Edit Group Claim" (click)="editGroupClaim(groupClaimItem.g_CLAIM_ID, groupClaimItem.scheme_ID, groupClaimItem.st_ID, groupClaimItem.ppl)" *ngIf="editButtonGroup(i)"></button>
+                  <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded light_indigo_btn p-mr-2" pTooltip="View Group Claim" (click)="openGroupClaimView(groupClaimItem.g_CLAIM_ID, groupClaimItem.st_ID)" *ngIf="!editButtonGroup(i)"></button>
+                </td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" [ngClass]="groupClaimLoading == true ? '' : 'sticky-column-fourth'" (click)="openGroupClaimView(groupClaimItem.g_CLAIM_ID, groupClaimItem.st_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ groupClaimItem.g_CLAIM_ID }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.region }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.lob }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.ppl }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button break" (click)="openSchemeView(groupClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ groupClaimItem.scheme_NAME }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(groupClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ groupClaimItem.scheme_ID }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.stock_TRANSFER }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.claim_AMT }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.role_DESCRIPTION }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.st_DESC }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.block_FLAG }}</td>
+                <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ groupClaimItem.remarks }}</td>
+                <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ groupClaimItem.created_BY }}</td>
+                <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ groupClaimItem.created_ON | date:"dd-MMM-yyyy" }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="20">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class='sixteen wide field pagination' style="margin-top: 20px; margin-bottom: 20px;" *ngIf="isGroupClaimObj">
+          <div *ngIf="gpager.pages && gpager.pages.length" class="ui right floated pagination menu">
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(1)" class="icon item">
+              First
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === 1}" (click)="setGroupClaimPage(gpager.currentPage - 1)" class="icon item">
+              Previous
+            </a>
+            <a *ngFor="let page of gpager.pages" [ngClass]="{active:gpager.currentPage === page}" (click)="setGroupClaimPage(page)" class="icon item">
+              {{page}}
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.currentPage + 1)" class="icon item">
+              Next
+            </a>
+            <a [ngClass]="{disabled:gpager.currentPage === gpager.totalPages}" (click)="setGroupClaimPage(gpager.totalPages)" class="icon item">
+              Last
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui large modal" id='modal_dealer_individual_claims_pre_registration'>
+    <div class="header">
+      Basic Individual Claim Details
+    </div>
+    <i class="close icon" (click)='closeIndividualClaimsRegistration()'></i>
+    <div class="content ui form">
+      <form >
+        <div class="three fields">
+          <div class="field">
+            <label>Month-Year <span class="required">*</span></label>
+            <div class="ui calendar" id="cal_dealer_individual_claims_month_year">
+              <div class="ui input left icon"> <i class="calendar icon"></i><input id="txt_dealer_individual_claims_month_year" name="MonthYear" type="text" placeholder="Select Month Year" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+            <div class="error-message" *ngIf="individualClaimsModalForm.controls.MONTH_YEAR.errors?.required && individualClaimsModalForm.controls.MONTH_YEAR.touched">Month-Year Required</div>
+          </div>
+
+          <div class="field">
+            <label>Scheme <span class="required">*</span></label>
+            <select class="ui dropdown selection search" id="dd_dealer_individual_claim_modal_scheme" >
+              <option selected disabled value="">Scheme</option>
+              <option *ngFor="let activeSchemeItem of activeSchemeList" value="{{ activeSchemeItem.SCHEME_ID }}">{{ activeSchemeItem.SCHEME_NAME }}</option>
+            </select> 
+            <div class="error-message" *ngIf="individualClaimsModalForm.controls.SCHEME.errors?.required && individualClaimsModalForm.controls.SCHEME.touched">Scheme Required</div>                       
+          </div>
+
+          <div class="field">
+            <label>Chassis No <span class="required">*</span></label>
+            <input type="text" placeholder="Enter Chassis No" id="txt_dealer_individual_claims_chassis_no" autocomplete="off" >
+            <div class="error-message" *ngIf="individualClaimsModalForm.controls.CHASSIS_NO.errors?.required && individualClaimsModalForm.controls.CHASSIS_NO.touched">Chassis No Required</div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="actions">
+          <div class="ui icon buttons right floated mb-15">
+            <button class="ui red_btn left labeled icon button" (click)='closeIndividualClaimsRegistration()'> <i class="close icon"></i> Cancel</button>
+            <button class="ui green_btn right labeled icon button right floated ml-10" (click)='validateIndividualBasicDetails()'>Proceed<i class="angle right icon"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui large modal" id='modal_dealer_group_claims_pre_registration'>
+    <div class="header">
+      Basic Group Claim Details
+    </div>
+    <i class="close icon" (click)='closeGroupClaimsRegistration()'></i>
+    <div class="content ui form">
+      <form >
+        <div class="three fields">
+          <div class="field">
+            <label>Month-Year <span class="required">*</span></label>
+            <div class="ui calendar" id="cal_group_claims_month_year">
+              <div class="ui input left icon"> <i class="calendar icon"></i><input id="txt_group_claims_month_year" name="MonthYear" type="text" placeholder="Select Month Year" class='datepicker' autocomplete="off"  style="opacity: unset!important;" readonly></div>
+            </div>
+            <div class="error-message" *ngIf="groupClaimsModalForm.controls.MONTH_YEAR.errors?.required && groupClaimsModalForm.controls.MONTH_YEAR.touched">Month-Year Required</div>
+          </div>
+
+          <div class="field">
+            <label>Scheme <span class="required">*</span></label>
+            <select class="ui dropdown selection search" id="dd_dealer_group_claim_modal_scheme" >
+              <option selected disabled value="">Scheme</option>
+              <option *ngFor="let activeSchemeGroupItem of activeSchemeGroupList" value="{{ activeSchemeGroupItem.SCHEME_ID }}">{{ activeSchemeGroupItem.SCHEME_NAME }}</option>
+            </select> 
+            <div class="error-message" *ngIf="groupClaimsModalForm.controls.SCHEME.errors?.required && groupClaimsModalForm.controls.SCHEME.touched">Scheme Required</div>                       
+          </div>
+
+          <div class="field">
+            <label>PPL <span class="required">*</span></label>
+            <select class="ui dropdown selection search" id="dd_dealer_group_claim_modal_ppl" >
+              <option selected disabled value="">PPL</option>
+              <option *ngFor="let pplItem of pplList" value="{{ pplItem }}">{{ pplItem }}</option>
+            </select> 
+            <div class="error-message" *ngIf="groupClaimsModalForm.controls.PPL.errors?.required && groupClaimsModalForm.controls.PPL.touched">PPL Required</div>                       
+          </div>
+
+          <div class="field">
+            <label>Status <span class="required">*</span></label>
+            <select class="ui dropdown selection search" id="dd_dealer_group_claim_modal_status" >
+              <option selected disabled value="">Status</option>
+              <option *ngFor="let statusGroupItem of statusGroupList" value="{{ statusGroupItem.st_ID }}">{{ statusGroupItem.st_DESC }}</option>
+            </select> 
+            <div class="error-message" *ngIf="groupClaimsModalForm.controls.STATUS.errors?.required && groupClaimsModalForm.controls.STATUS.touched">Status Required</div>                       
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="actions">
+          <div class="ui icon buttons right floated mb-15">
+            <button class="ui red_btn left labeled icon button" (click)='closeGroupClaimsRegistration()'> <i class="close icon"></i> Cancel</button>
+            <button class="ui green_btn right labeled icon button right floated ml-10" (click)='validateGroupBasicDetails()'>Proceed<i class="angle right icon"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui large modal" id='modal_dealer_advance_search'>
+    <div class="header">
+      Advance Search Filters
+    </div>
+    <i class="close icon" (click)='closeAdvanceSearch()'></i>
+    <div class="content ui form">
+      <form>
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field">
+            <label>Dealer Code</label>
+            <input type="text" placeholder="Enter Dealer Code (Comma Seperated)" id="txt_dealer_dashboard_dealer_code" autocomplete="off" [readonly]="isDSADMIN">
+          </div>
+
+          <div class="field">
+            <label>NFA No</label>
+            <input type="text" placeholder="Enter NFA No (Comma Seperated)" id="txt_dealer_dashboard_nfa_no" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Claim Type</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_claim_type">
+              <option selected disabled value="">Claim Type</option>
+              <option *ngFor="let claimTypeItem of claimTypeList" value="{{ claimTypeItem }}">{{ claimTypeItem }}</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="!isDSADMIN">
+            <label>Custody Role</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_custody_role">
+              <option selected disabled value="">Custody Role</option>
+              <option *ngFor="let custodyRoleItem of custodyRoleList" value="{{ custodyRoleItem.role_ID }}">{{ custodyRoleItem.role_DESCRIPTION }}</option>
+            </select>
+          </div>
+
+          <div class="field" [hidden]="isDSADMIN">
+            <label>Assignment Type</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_assignment_type">
+              <option selected disabled value="">Assignment Type</option>
+              <option *ngFor="let assignmentTypeItem of assignmentTypeList" value="{{ assignmentTypeItem.value }}">{{ assignmentTypeItem.description }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Stock Transfer</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_stock_transfer">
+              <option selected disabled value="">Stock Transfer</option>
+              <option value="NA">NA</option>
+              <option value="INTRA">Intra</option>
+              <option value="INTER">Inter</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="five fields" style="margin-left: 10px!important;">
+          <div class="field" hidden>
+            <label>Claim Amount Type</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_claim_amount_type">
+              <option selected disabled value="">Claim Amount Type</option>
+              <option value="NA">NA</option>
+              <option value="L">Less Than</option>
+              <option value="G">Greater Than</option>
+            </select>
+          </div>
+
+          <div class="field" hidden>
+            <label>Claim Amount <span id="span_dealer_dashboard_claim_amount"></span> </label>
+            <div class="ui range" id="range_dealer_dashboard_claim_amount"></div>
+          </div>
+
+          <div class="field">
+            <label>Date Type</label>
+            <select class='ui selection dropdown' id="dd_dealer_dashboard_date_type">
+              <option selected disabled value="">Date Type</option>
+              <option value="NA">NA</option>
+              <option value="C">Created On</option>
+              <option value="U">Updated On</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Start Date </label>
+            <div class="ui calendar" id="cal_dealer_dashboard_start_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="StartDate" id="txt_dealer_dashboard_start_date" type="text" placeholder="Start Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+      
+          <div class="field">
+            <label>End Date </label>
+            <div class="ui calendar" id="cal_dealer_dashboard_end_date">
+              <div class="ui input left icon"> <i class="calendar icon"></i> <input name="EndDate" id="txt_dealer_dashboard_end_date" type="text" placeholder="End Date" class='datepicker' autocomplete="off" style="opacity: unset!important;" readonly></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="five fields">
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+          <div class="field">&nbsp;</div>
+
+          <div class='field'>
+            <div class="field pull-right">
+              <div class="ui buttons">
+                <button class="ui button green_btn" id="btn_dealer_dashboard_modal_search" (click)="searchFilter(false)">Search</button>
+                <div class="or"></div>
+                <button class="ui button red_btn" id="btn_dealer_dashboard_modal_reset" (click)="clearAdvanceFilter(false)">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_dealer_bulk_claims'>
+    <div class="header">
+      Bulk Claim Upload
+    </div>
+    <i class="close icon" (click)='closeBulkClaimUpload()'></i>
+    <div class="scrolling content ui form">
+      <form>
+        <div class="two fields">
+          <div class="field">
+            <label>Bulk Claim Upload</label>
+            <input class="ui input focus" id="file_bulk_claim" type="file" (change)="chooseBulkClaimFile($event)">
+          </div>
+    
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" class="ui light_indigo_btn button" (click)="uploadBulkClaimFile()" [disabled]="!isBulkClaimFile">
+              <i class="upload icon"></i>Validate and Upload
+            </button>
+            <button type="button" class="ui button green_btn" (click)='downloadBulkClaimTemplate()'>
+              <i class="download icon"></i>Download Template
+            </button>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="sixteen wide field box-shadow-custom table-responsive">
+            <p-table [value]="bulkClaimObj" [loading]="bulkClaimLoading" dataKey="" styleClass="p-datatable-striped" [rowHover]="true" id="dealerBulkClaimTable">
+              <ng-template pTemplate="caption">
+                <div class="p-d-flex">
+                  <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportBulkClaims()" class="p-button-success p-mr-2 sticky-column-btn-one" pTooltip="Export Bulk Claims Data" tooltipPosition="bottom" [disabled]="!isBulkClaimObj"></button>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Dealer Code</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Chassis No</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Scheme Name</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Scheme ID</th>
+                  <th style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">Claim Amount</th>
+                  <th style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">Claim Id</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Status</th>
+                  <th style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">Remark</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-bulkClaimItem let-i="rowIndex">
+                <tr>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;">{{ bulkClaimItem.dealer_CODE }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class="toggle-button" (click)="openChassisView(bulkClaimItem.chassis_NO)" pTooltip="View Chassis" tooltipPosition="bottom">{{ bulkClaimItem.chassis_NO }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(bulkClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ bulkClaimItem.scheme_NAME }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openSchemeView(bulkClaimItem.scheme_ID)" pTooltip="View Scheme" tooltipPosition="bottom">{{ bulkClaimItem.scheme_ID }}</td>
+                  <td style="width: 100px!important;min-width: 100px!important;white-space: break-spaces;">{{ bulkClaimItem.claim_AMOUNT }}</td>
+                  <td style="width: 150px!important;min-width: 150px!important;white-space: break-spaces;" class="toggle-button" (click)="openIndividualClaimView(bulkClaimItem.chassis_NO, bulkClaimItem.claim_ID, bulkClaimItem.scheme_ID, bulkClaimItem.st_ID)" pTooltip="View Claim" tooltipPosition="bottom">{{ bulkClaimItem.claim_ID }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ bulkClaimItem.status }}</td>
+                  <td style="width: 210px!important;min-width: 210px!important;white-space: break-spaces;">{{ bulkClaimItem.remark }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="20">No Data Available</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="actions">
+          <div class="ui icon buttons right floated mb-15">
+            <button class="ui red_btn left labeled icon button" (click)='resetBulkClaims()'> <i class="sync icon"></i> Reset</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_dealer_individual_claim_creation'>
+    <div class="header">
+      {{ individualClaimHeader }}
+    </div>
+    <i class="close icon" (click)='closeIndividualClaim()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="individualClaimTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_dealer_individual_claim_view'>
+    <div class="header">
+      View Individual Claim
+    </div>
+    <i class="close icon" (click)='closeIndividualClaimView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="individualClaimViewTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_dealer_group_claim_creation'>
+    <div class="header">
+      {{ groupClaimHeader }}
+    </div>
+    <i class="close icon" (click)='closeGroupClaim()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="groupClaimTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_dealer_group_claim_view'>
+    <div class="header">
+      View Group Claim
+    </div>
+    <i class="close icon" (click)='closeGroupClaimView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="groupClaimViewTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='modal_chassis_view'>
+    <div class="header">
+      View Chassis
+    </div>
+    <i class="close icon" (click)='closeChassisView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <ng-template [ngComponentOutlet]="chassisViewTabsLazyComp | async"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='model_dealer_individual_claim_url_view'>
+    <div class="header">
+      View Individual Claim
+    </div>
+    <i class="close icon" (click)='closeIndividualClaimView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.individualClaimViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fullscreen coupled modal" id='model_dealer_scheme_url_view'>
+    <div class="header">
+      View Scheme
+    </div>
+    <i class="close icon" (click)='closeSchemeView()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <object type="text/html" [data]="sharedService.schemeViewUrl | safe" width="100%"></object>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_dealer_available_discount'>
+    <div class="header">
+      Discount Distribution
+    </div>
+    <i class="close icon" (click)='closeAvailableDiscount()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="sharedService.availableDiscountLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_dealer_avail_concession'>
+    <div class="header">
+      Concession Distribution
+    </div>
+    <i class="close icon" (click)='closeAvailConcession()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="sharedService.availConcessionLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_dealer_actual_concession_crm'>
+    <div class="header">
+      CRM Concession Details
+    </div>
+    <i class="close icon" (click)='closeActualConcessionCRM()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="sharedService.actualConcessionCRMLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui longer fullscreen coupled modal" id='model_dealer_crm_credit_amount'>
+    <div class="header">
+      CRM Credit Note Details
+    </div>
+    <i class="close icon" (click)='closeCRMCreditAmount()'></i>
+    <div class="scrolling content body">
+      <form class="ui form segment top-section">
+        <div class='row'>
+          <div class="row first-form app-form">
+            <ng-template [ngComponentOutlet]="sharedService.crmCreditAmountLazyComp | async"></ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui large modal coupled" id='modal_dealer_initial_validation'>
+    <div class="header">
+      Initial Validation Failed
+    </div>
+    <i class="close icon" (click)='closeInitialValidation()'></i>
+    <div class="scrolling content">
+      <div class="body">
+        <div class="sixteen wide field">
+          <p-table class="box-shadow-custom" [value]="initialValidationObj" [loading]="initialValidationLoading" styleClass="p-datatable-striped" [rowHover]="true" id="initialValidationTable">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 81vw;white-space: break-spaces;" class='text-center'>Validation Message</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-initialValidationItem let-i="rowIndex">
+              <tr>
+                <td style="width: 81vw;white-space: break-spaces;">{{ initialValidationItem }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="1">No Data Available</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

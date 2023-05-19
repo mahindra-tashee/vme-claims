@@ -1,0 +1,22 @@
+#concessionTrackingTable {
+  position: relative;
+  width: 100% !important;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  transition: all 0.2s;
+  user-select: none;
+  cursor: pointer;
+} 
+#concessionTrackingTable.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  transform: scale(1);
+}
+#concessionTrackingTable {
+  display: inline-block;
+  @media screen and (max-width: 500px) {
+    min-height: 200px;
+    min-width: 200px;
+  }
+}
